@@ -15,13 +15,13 @@
  + `预览模式` ：该模式并列显示 HTML 视图和 Markdown 编辑器，用于实时预览 Markdown 内容的 HTML 显示；
 
 <p align="center">
-    <image src="./README/screenshot.png" width="95%">
+    <img src="./README/screenshot.png" width="95%">
 </p>
 
 Smark 以阅读模式为基础模式，同样按 `Esc` 键可从任意模式回至阅读模式。我是一个键盘党，所以 Smark 具有一套完备的快捷键（详见[Smark快捷键列表](#hotkey)），仅仅使用键盘就能够搞定一切事情，这在使用上将带来巨大效率。此外 Smark 尽可能的简化用户的操作，只要不是必须由用户指明的，都由 Smark 自动进行：为此进行了许多细致的设计，例如根据窗口尺寸自动调整 HTML 视图和 Markdown 编辑器的布局（垂直布局和水平布局，包括 CSS 编辑器的布局）以达到最佳视觉效果；HTML 视图和 Markdown 编辑器的同步垂直滚动等等。正如您所见，由于个人的使用需求，Smark 引入 [MathJax](http://www.mathjax.org) 以拓展 Markdown 来显示数学公式（虽然 pandoc 也这么干了，但是那样很不方便），下面是一个简单的例子：
 
 <p align="center">
-    <image src="./README/example.png" width="80%">
+    <img src="./README/example.png" width="80%">
 </p>
 
 Smark 依赖于 [`pandoc`](http://johnmacfarlane.net/pandoc/)、[`Qt 4.8`](http://qt-project.org/) 和 [MathJax](http://www.mathjax.org)，在此向上述软件包开发者们致敬。请注意继承于 pandoc 的发布协议，Smark 同样遵循 [LGPL](http://www.gnu.org/copyleft/gpl.html)，如有任何疑问请联系 [elerao.ao@gmail.com](elerao.ao@gmail.com)，我将尽快做出回复。
