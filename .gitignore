@@ -1,0 +1,53 @@
+# Temp makefile
+Makefile
+makefile
+dev-Smark
+dev-smark
+dev-Smark.exe
+dev-smark.exe
+
+# Qt Creator Files
+*.user
+*.pro.user
+*.Debug
+*.Release
+*.debug
+*.release
+*.pdb
+*.ilk
+*.manifest
+*.autosave
+*h.autosave
+*cpp.autosave
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# swap file
+.*.*
+*.swap
+*.buf
+*.swp
+
+# exe and its output
+*.exe
+*.out
+*.xls
+*.xlsx
+*.txt
+*.log
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
