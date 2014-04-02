@@ -10,6 +10,11 @@
     <height>649</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Ubuntu Mono</family>
+   </font>
+  </property>
   <property name="acceptDrops">
    <bool>true</bool>
   </property>
@@ -61,7 +66,11 @@
           <property name="childrenCollapsible">
            <bool>false</bool>
           </property>
-          <widget class="GuiHtmlView" name="WebView" native="true"/>
+          <widget class="GuiHtmlView" name="WebView" native="true">
+           <property name="acceptDrops">
+            <bool>true</bool>
+           </property>
+          </widget>
           <widget class="QPlainTextEdit" name="EditCSS"/>
          </widget>
         </item>
@@ -198,13 +207,38 @@
      <height>21</height>
     </rect>
    </property>
-   <property name="nativeMenuBar">
-    <bool>false</bool>
+   <property name="font">
+    <font>
+     <family>Ubuntu Mono</family>
+    </font>
    </property>
    <widget class="QMenu" name="MenuFile">
+    <property name="font">
+     <font>
+      <family>Ubuntu Mono</family>
+     </font>
+    </property>
     <property name="title">
      <string>File (&amp;F)</string>
     </property>
+    <widget class="QMenu" name="MenuExportAs">
+     <property name="font">
+      <font>
+       <family>Ubuntu Mono</family>
+      </font>
+     </property>
+     <property name="title">
+      <string>Export As</string>
+     </property>
+     <addaction name="ActionFileExportHTML"/>
+     <addaction name="ActionFileExportPlainText"/>
+     <addaction name="ActionFileExportReStructuredText"/>
+     <addaction name="ActionFileExportEPUB"/>
+     <addaction name="ActionFileExportMediaWikiMarkup"/>
+     <addaction name="ActionFileExportLaTeX"/>
+     <addaction name="ActionFileExportOpenOfficeODT"/>
+     <addaction name="ActionFileExportDocx"/>
+    </widget>
     <addaction name="ActionFileNew"/>
     <addaction name="ActionFileOpen"/>
     <addaction name="ActionFileSave"/>
@@ -212,10 +246,16 @@
     <addaction name="ActionFileClose"/>
     <addaction name="separator"/>
     <addaction name="ActionFileExport"/>
+    <addaction name="MenuExportAs"/>
     <addaction name="separator"/>
     <addaction name="ActionFileQuite"/>
    </widget>
    <widget class="QMenu" name="MenuView">
+    <property name="font">
+     <font>
+      <family>Ubuntu Mono</family>
+     </font>
+    </property>
     <property name="title">
      <string>View (&amp;V)</string>
     </property>
@@ -228,6 +268,11 @@
     <addaction name="ActionViewHideToolbar"/>
    </widget>
    <widget class="QMenu" name="MenuEdit">
+    <property name="font">
+     <font>
+      <family>Ubuntu Mono</family>
+     </font>
+    </property>
     <property name="title">
      <string>Edit (&amp;E)</string>
     </property>
@@ -242,8 +287,14 @@
     <addaction name="ActionEditUndo"/>
     <addaction name="separator"/>
     <addaction name="ActionEditCSS"/>
+    <addaction name="ActionEditCopyHTML"/>
    </widget>
    <widget class="QMenu" name="MenuInsert">
+    <property name="font">
+     <font>
+      <family>Ubuntu Mono</family>
+     </font>
+    </property>
     <property name="tearOffEnabled">
      <bool>false</bool>
     </property>
@@ -258,6 +309,11 @@
     <addaction name="ActionInsertFormation"/>
    </widget>
    <widget class="QMenu" name="MenuFormat">
+    <property name="font">
+     <font>
+      <family>Ubuntu Mono</family>
+     </font>
+    </property>
     <property name="title">
      <string>Format (&amp;S)</string>
     </property>
@@ -281,6 +337,11 @@
     <addaction name="ActionFormatAlignCenter"/>
    </widget>
    <widget class="QMenu" name="MenuHelp">
+    <property name="font">
+     <font>
+      <family>Ubuntu Mono</family>
+     </font>
+    </property>
     <property name="title">
      <string>Help (&amp;H)</string>
     </property>
@@ -349,6 +410,7 @@
    <addaction name="ActionEditCut"/>
    <addaction name="ActionEditPaste"/>
    <addaction name="ActionEditFind"/>
+   <addaction name="ActionEditCopyHTML"/>
    <addaction name="separator"/>
    <addaction name="ActionInsertImage"/>
    <addaction name="ActionInsertLink"/>
@@ -381,9 +443,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="ActionFileOpen">
@@ -467,7 +526,7 @@
     <string>Image</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+I</string>
+    <string>Ctrl+Shift+I, Ctrl+Shift+P</string>
    </property>
   </action>
   <action name="ActionInsertLink">
@@ -710,7 +769,7 @@
     <string>Read Only</string>
    </property>
    <property name="shortcut">
-    <string>F7</string>
+    <string>F6</string>
    </property>
   </action>
   <action name="ActionViewEditOnly">
@@ -747,7 +806,7 @@
     <string>Preview</string>
    </property>
    <property name="shortcut">
-    <string>F6</string>
+    <string>F7</string>
    </property>
   </action>
   <action name="ActionFileExport">
@@ -759,7 +818,7 @@
     <string>Export</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+E</string>
+    <string>Ctrl+Shift+E</string>
    </property>
   </action>
   <action name="ActionViewHideMenu">
@@ -814,6 +873,114 @@
     <string>Ctrl+E</string>
    </property>
   </action>
+  <action name="ActionEditCopyHTML">
+   <property name="icon">
+    <iconset resource="rs/icon.qrc">
+     <normaloff>:/icon/edit-copy-html.png</normaloff>:/icon/edit-copy-html.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy HTML</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
+   </property>
+  </action>
+  <action name="ActionFileExportHTML">
+   <property name="icon">
+    <iconset resource="rs/file.qrc">
+     <normaloff>:/file/html.png</normaloff>:/file/html.png</iconset>
+   </property>
+   <property name="text">
+    <string>*.html -- HTML Page</string>
+   </property>
+   <property name="toolTip">
+    <string>Export As HTML Page</string>
+   </property>
+  </action>
+  <action name="ActionFileExportDocx">
+   <property name="icon">
+    <iconset resource="rs/file.qrc">
+     <normaloff>:/file/docx.png</normaloff>:/file/docx.png</iconset>
+   </property>
+   <property name="text">
+    <string>*.docx -- Microsoft Word</string>
+   </property>
+   <property name="toolTip">
+    <string>Export as Microsoft Word</string>
+   </property>
+  </action>
+  <action name="ActionFileExportLaTeX">
+   <property name="icon">
+    <iconset resource="rs/file.qrc">
+     <normaloff>:/file/latex.png</normaloff>:/file/latex.png</iconset>
+   </property>
+   <property name="text">
+    <string>*.tex  -- LaTeX Format Text</string>
+   </property>
+   <property name="toolTip">
+    <string>Export As LaTeX Format Text</string>
+   </property>
+  </action>
+  <action name="ActionFileExportOpenOfficeODT">
+   <property name="icon">
+    <iconset resource="rs/file.qrc">
+     <normaloff>:/file/odt.png</normaloff>:/file/odt.png</iconset>
+   </property>
+   <property name="text">
+    <string>*.odt  -- OpenOffice/LibreOffice Document</string>
+   </property>
+   <property name="toolTip">
+    <string>Export As OpenOffice/LibreOffice Document</string>
+   </property>
+  </action>
+  <action name="ActionFileExportReStructuredText">
+   <property name="icon">
+    <iconset resource="rs/file.qrc">
+     <normaloff>:/file/rst.png</normaloff>:/file/rst.png</iconset>
+   </property>
+   <property name="text">
+    <string>*.rst  -- ReStructured Text</string>
+   </property>
+   <property name="toolTip">
+    <string>Export As ReStructured Text</string>
+   </property>
+  </action>
+  <action name="ActionFileExportMediaWikiMarkup">
+   <property name="icon">
+    <iconset resource="rs/file.qrc">
+     <normaloff>:/file/wiki.png</normaloff>:/file/wiki.png</iconset>
+   </property>
+   <property name="text">
+    <string>*.wiki -- Media Wiki Markup</string>
+   </property>
+   <property name="toolTip">
+    <string>Export As Media Wiki markup</string>
+   </property>
+  </action>
+  <action name="ActionFileExportEPUB">
+   <property name="icon">
+    <iconset resource="rs/file.qrc">
+     <normaloff>:/file/epub.png</normaloff>:/file/epub.png</iconset>
+   </property>
+   <property name="text">
+    <string>*.epub -- EPUB Ebook</string>
+   </property>
+   <property name="toolTip">
+    <string>Export As EPUB Ebook</string>
+   </property>
+  </action>
+  <action name="ActionFileExportPlainText">
+   <property name="icon">
+    <iconset resource="rs/file.qrc">
+     <normaloff>:/file/txt.png</normaloff>:/file/txt.png</iconset>
+   </property>
+   <property name="text">
+    <string>*.txt  -- Plain Text</string>
+   </property>
+   <property name="toolTip">
+    <string>Export As Plain Text</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -829,6 +996,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="rs/file.qrc"/>
   <include location="rs/icon.qrc"/>
  </resources>
  <connections/>

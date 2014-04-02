@@ -15,14 +15,14 @@ class GuiWindowSmark : public QMainWindow
 
 private: // aux function
 
-    void _aux_signal_slot_connect(void);
-    void _aux_switch_GUI_mode(SmarkMode mode);
-    void _aux_init_GUI(void);
-    void _aux_enable_GUI(void);
-    void _aux_disable_GUI(void);
-    void _aux_set_current_path(const QString& path);
-    bool _aux_cancel_current_operation(void);
-    void _aux_do_parse(void);
+    void _aux_connectSignalAndSlot(void);
+    void _aux_switchDisplayMode(SmarkMode mode);
+    void _aux_initGUI(void);
+    void _aux_enableGUI(void);
+    void _aux_disableGUI(void);
+    void _aux_setCurrentPath(const QString& path);
+    bool _aux_cancelCurrentOperation(void);
+    void _aux_parseMarkdownToHTML(void);
 
 public: // ctor & dtor
 
@@ -51,6 +51,15 @@ private slots: // GUI slots
     void on_ActionFileClose_triggered(void);
     void on_ActionFileQuite_triggered(void);
     void on_ActionFileExport_triggered(void);
+    void on_ActionFileExportHTML_triggered(void);
+    void on_ActionFileExportDocx_triggered(void);
+    void on_ActionFileExportLaTeX_triggered(void);
+    void on_ActionFileExportOpenOfficeODT_triggered(void);
+    void on_ActionFileExportReStructuredText_triggered(void);
+    void on_ActionFileExportMediaWikiMarkup_triggered(void);
+    void on_ActionFileExportEPUB_triggered(void);
+    void on_ActionFileExportPlainText_triggered(void);
+
 
     // menu view
     void on_ActionViewReadOnly_triggered(void);
@@ -69,6 +78,7 @@ private slots: // GUI slots
     void on_ActionEditUndo_triggered(void);
     void on_ActionEditFind_triggered(void);
     void on_ActionEditCSS_triggered(void);
+    void on_ActionEditCopyHTML_triggered();
 
     // menu insert
     void on_ActionInsertImage_triggered(void);
@@ -107,13 +117,15 @@ private slots: // GUI slots
 private: // private member data
 
     Ui::GuiWindowSmark *ui;
+    SmarkMode   _current_mode;
     SmarkParser _parser;
 
     bool    _is_modified;
     bool    _CSS_is_modified;
     QString _current_path;
-    QString _mark_cache;
-    QString _html_cache;
+    QString _mark_cache_path;
+    QString _html_cache_path;
+    QString _html;
 };
 
 #endif // GUI_SMARK_MAIN_WINDOW_H

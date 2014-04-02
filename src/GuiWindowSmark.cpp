@@ -6,23 +6,49 @@
 
 /* *****************************************************************************
  *
+ *                                 ctor & dtor
+ *
+ * ****************************************************************************/
+
+ GuiWindowSmark::GuiWindowSmark(QWidget *parent)
+    : QMainWindow(parent),
+      ui(new Ui::GuiWindowSmark),
+      _is_modified(false),
+      _CSS_is_modified(false),
+      _mark_cache_path(gMarkCachePath()),
+      _html_cache_path(gHtmlCachePath())
+{
+    ui->setupUi(this);
+    _aux_initGUI();
+    _aux_disableGUI();
+    _aux_connectSignalAndSlot();
+    // _mark_cache_path = gMarkCachePath(_current_path);
+    // _html_cache_path = gHtmlCachePath(_current_path);
+}
+
+GuiWindowSmark::~GuiWindowSmark(void) {
+    delete ui;
+}
+
+/* *****************************************************************************
+ *
  *                              aux function
  *
  * ****************************************************************************/
 
-void GuiWindowSmark::_aux_signal_slot_connect(void)
+void GuiWindowSmark::_aux_connectSignalAndSlot(void)
 {
     connect(ui->EditMark, SIGNAL(textChanged()),
-            this, SLOT(when_mark_is_edit()) );
+            this,         SLOT(when_mark_is_edit()) );
     connect(ui->EditCSS, SIGNAL(textChanged()),
-            this, SLOT(when_css_is_edit()) );
+            this,        SLOT(when_css_is_edit()) );
     connect(&_parser, SIGNAL(completed()),
-            this, SLOT(when_parser_process_finish()) );
+            this,     SLOT(when_parser_process_finish()) );
     connect(ui->EditMark, SIGNAL(verticalScroll(float)),
             ui->WebView,  SLOT(setScrollRatio(float)) );
 }
 
-void GuiWindowSmark::_aux_switch_GUI_mode(SmarkMode mode)
+void GuiWindowSmark::_aux_switchDisplayMode(SmarkMode mode)
 {
     switch(mode) {
     case EditMode :
@@ -63,10 +89,10 @@ void GuiWindowSmark::_aux_switch_GUI_mode(SmarkMode mode)
         }
         break;
     }
-    gApp().CurrentMode = mode;
+    _current_mode = mode;
 }
 
-void GuiWindowSmark::_aux_init_GUI(void)
+void GuiWindowSmark::_aux_initGUI(void)
 {
     QPalette palette;
     palette.setColor(QPalette::Base, Qt::black);
@@ -81,15 +107,30 @@ void GuiWindowSmark::_aux_init_GUI(void)
     ui->EditMark->setFont(font);
     ui->EditCSS->setFont(font);
 
+    // set CSS test
+    ui->EditCSS->setPlainText(gApp().CSS);
+
     // hide widgets until we need them
+    _aux_switchDisplayMode(gApp().Config.StartMode);
     ui->EditCSS->hide();
     ui->FindGroup->hide();
-    menuWidget()->hide();
-    // ui->ToolBarNormal->hide();
-    // ui->ToolBarEditor->hide();
+    if(false == gApp().Config.ShowMenu) {
+        ui->MenuBar->hide();
+        ui->ActionViewHideMenu->setText("Show Menu");
+    }
+    if(false == gApp().Config.ShowToolbar) {
+        ui->ToolBarNormal->hide();
+        ui->ToolBarEditor->hide();
+        ui->ActionViewHideToolbar->setText("Show Toolbar");
+    }
+
+    // set drops accept
+    ui->WebView->setAcceptDrops(false);
+    ui->EditMark->setAcceptDrops(false);
+    setAcceptDrops(true);
 }
 
-void GuiWindowSmark::_aux_enable_GUI(void)
+void GuiWindowSmark::_aux_enableGUI(void)
 {
     // center widget
     ui->CentralWidget->setEnabled(true);
@@ -99,6 +140,7 @@ void GuiWindowSmark::_aux_enable_GUI(void)
     ui->ActionFileSaveAs->setEnabled(true);
     ui->ActionFileClose->setEnabled(true);
     ui->ActionFileExport->setEnabled(true);
+    ui->MenuExportAs->setEnabled(true);
 
     // edit menu
     ui->ActionEditFlush->setEnabled(true);
@@ -109,6 +151,7 @@ void GuiWindowSmark::_aux_enable_GUI(void)
     ui->ActionEditUndo->setEnabled(true);
     ui->ActionEditFind->setEnabled(true);
     ui->ActionEditCSS->setEnabled(true);
+    ui->ActionEditCopyHTML->setEnabled(true);
 
     // insert menu
     ui->ActionInsertImage->setEnabled(true);
@@ -125,9 +168,12 @@ void GuiWindowSmark::_aux_enable_GUI(void)
     ui->ActionFormatSup->setEnabled(true);
     ui->ActionFormatCode->setEnabled(true);
     ui->ActionFormatQuote->setEnabled(true);
+    ui->ActionFormatAlignCenter->setEnabled(true);
+    ui->ActionFormatAlignLeft->setEnabled(true);
+    ui->ActionFormatAlignRight->setEnabled(true);
 }
 
-void GuiWindowSmark::_aux_disable_GUI(void)
+void GuiWindowSmark::_aux_disableGUI(void)
 {
     // center widget
     ui->CentralWidget->setEnabled(false);
@@ -137,6 +183,7 @@ void GuiWindowSmark::_aux_disable_GUI(void)
     ui->ActionFileSaveAs->setEnabled(false);
     ui->ActionFileClose->setEnabled(false);
     ui->ActionFileExport->setEnabled(false);
+    ui->MenuExportAs->setEnabled(false);
 
     // edit menu
     ui->ActionEditFlush->setEnabled(false);
@@ -147,6 +194,7 @@ void GuiWindowSmark::_aux_disable_GUI(void)
     ui->ActionEditUndo->setEnabled(false);
     ui->ActionEditFind->setEnabled(false);
     ui->ActionEditCSS->setEnabled(false);
+    ui->ActionEditCopyHTML->setEnabled(false);
 
     // insert menu
     ui->ActionInsertImage->setEnabled(false);
@@ -163,13 +211,16 @@ void GuiWindowSmark::_aux_disable_GUI(void)
     ui->ActionFormatSup->setEnabled(false);
     ui->ActionFormatCode->setEnabled(false);
     ui->ActionFormatQuote->setEnabled(false);
+    ui->ActionFormatAlignCenter->setEnabled(false);
+    ui->ActionFormatAlignLeft->setEnabled(false);
+    ui->ActionFormatAlignRight->setEnabled(false);
 }
 
-void GuiWindowSmark::_aux_set_current_path(const QString& path)
+void GuiWindowSmark::_aux_setCurrentPath(const QString& path)
 {
     _current_path = path;
-    _mark_cache   = gMarkCachePath(path);
-    _html_cache   = gHtmlCachePath(path);
+    _mark_cache_path   = gMarkCachePath(path);
+    _html_cache_path   = gHtmlCachePath(path);
     if(path.isEmpty()) {
         setWindowTitle("Smark");
     } else {
@@ -178,82 +229,56 @@ void GuiWindowSmark::_aux_set_current_path(const QString& path)
     }
 }
 
-bool GuiWindowSmark::_aux_cancel_current_operation(void)
+bool GuiWindowSmark::_aux_cancelCurrentOperation(void)
 {
-    const bool Cancel = true, GoOn = false;
-    if(_is_modified) {
-        QMessageBox::StandardButton select = QMessageBox::warning(
-                                                 this,
-                                                 tr("Warning"),
-                                                 tr("Do you want to save your"
-                                                    " modifications to the current document ?"),
-                                                 QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
-                                                 QMessageBox::Cancel);
+    const bool Cancel = true;
+    const bool   GoOn = false;
+    if(_is_modified == false) return GoOn;
 
-        if(QMessageBox::Cancel == select) {
+    // show a dialog to let user chose
+    QMessageBox::StandardButton select
+            = QMessageBox::warning(
+                  this,
+                  tr("Warning"),
+                  tr("Do you want to save your"
+                     " modifications to the current document ?"),
+                  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
+                  QMessageBox::Cancel );
+
+    if(QMessageBox::Cancel == select) {
+        return Cancel;
+    } else if(QMessageBox::Yes == select) {
+        // if current path is empty, select a path to save
+        if(_current_path.isEmpty()) {
+            QString path = QFileDialog::getSaveFileName(
+                               this,
+                               tr("Save Current Markdown File"),
+                               tr("~/") );
+            if(path.isEmpty()) return Cancel;
+            _aux_setCurrentPath(path);
+        }
+        // save current markdown context
+        QString error, context;
+        context = ui->EditMark->toPlainText();
+        if(false == gSaveTextFile(_current_path, context, &error)) {
+            QMessageBox::warning(this, tr("Error"), error);
             return Cancel;
-        } else if(QMessageBox::Yes == select) {
-            // if current path is empty, select a path to save
-            if(_current_path.isEmpty()) {
-                QString path = QFileDialog::getSaveFileName(
-                                   this,
-                                   tr("Save Current Markdown File"),
-                                   tr("~/") );
-                if(path.isEmpty()) return Cancel;
-                _aux_set_current_path(path);
-            }
-            // save current markdown context
-            QString error, context;
-            context = ui->EditMark->toPlainText();
-            if(! gSaveTextFile(_current_path, context, &error)) {
-                QMessageBox::warning(this, tr("Error"), error);
-                return Cancel;
-            } else {
-                _is_modified = false;
-                return GoOn;
-            }
-        }// if...else if...
-    }//if(_is_modified)
+        } else {
+            _is_modified = false;
+            return GoOn;
+        }
+    }// if...else if...
     return GoOn;
 }
 
-void GuiWindowSmark::_aux_do_parse(void)
+void GuiWindowSmark::_aux_parseMarkdownToHTML(void)
 {
-    QString error, text;
-    text = ui->EditMark->toPlainText();
-    if(! gSaveTextFile(_mark_cache, text, &error)) {
+    QString error;
+    QString text = ui->EditMark->toPlainText();
+    if(false == gSaveTextFile(_mark_cache_path, text, &error))
         QMessageBox::warning(this, "Write Cache File Error", error);
-    } else {
-        _parser.parseMarkToHtml(_mark_cache, _html_cache);
-    }
-}
-
-/* *****************************************************************************
- *
- *                                 ctor & dtor
- *
- * ****************************************************************************/
-
-GuiWindowSmark::GuiWindowSmark(QWidget *parent)
-    : QMainWindow(parent),
-      ui(new Ui::GuiWindowSmark),
-      _is_modified(false), _CSS_is_modified(false)
-{
-    ui->setupUi(this);
-    _aux_init_GUI();
-    _aux_disable_GUI();
-    _aux_signal_slot_connect();
-    _aux_switch_GUI_mode(gApp().CurrentMode);
-    _mark_cache = gMarkCachePath(_current_path);
-    _html_cache = gHtmlCachePath(_current_path);
-}
-
-GuiWindowSmark::~GuiWindowSmark(void) {
-    if(_CSS_is_modified) { // save modified CSS to file
-        gApp().CSS = ui->EditCSS->toPlainText();
-        ::gSaveTextFile(gApp().CSSPath, gApp().CSS);
-    }
-    delete ui;
+    else
+        _parser.parseMarkToHtml(_mark_cache_path, _html_cache_path, gApp().CSSPath);
 }
 
 /* *****************************************************************************
@@ -264,14 +289,14 @@ GuiWindowSmark::~GuiWindowSmark(void) {
 
 void GuiWindowSmark::openMarkdownFile(const QString& path) {
     QString error, context;
-    if(! gLoadTextFile(path, &context, &error)) {
+    if(false == gLoadTextFile(path, &context, &error)) {
         QMessageBox::warning(this, tr("Error"), error);
-        _aux_disable_GUI();
+        _aux_disableGUI();
     } else {
-        _aux_enable_GUI();
+        _aux_enableGUI();
         ui->EditMark->setPlainText(context);
         _is_modified = false;
-        _aux_set_current_path(path);
+        _aux_setCurrentPath(path);
         on_ActionEditFlush_triggered();
     }
 }
@@ -282,50 +307,59 @@ void GuiWindowSmark::openMarkdownFile(const QString& path) {
  *
  * ****************************************************************************/
 
-void GuiWindowSmark::resizeEvent(QResizeEvent *) {
-    _aux_switch_GUI_mode(gApp().CurrentMode);
-
+void GuiWindowSmark::resizeEvent(QResizeEvent* event) {
+    // do not call QMainWindow::resizeEvent(event);
+    QMainWindow::resizeEvent(event);
+    _aux_switchDisplayMode(_current_mode);
 }
+
 void GuiWindowSmark::keyPressEvent(QKeyEvent* event)
 {
     if(event->key() == Qt::Key_Escape) {
         // Omnipotent Esc Key
-        static bool ExitFullScreenNextTime = false;
-        if(ExitFullScreenNextTime) {
-            if(this->isFullScreen())
-                this->showNormal();
-            ExitFullScreenNextTime = false;
-        }
         if(ui->FindGroup->isVisible()) {
             ui->FindGroup->hide();
             ui->EditMark->setFocus();
-            ExitFullScreenNextTime = true;
         } else if(ui->EditCSS->isVisible()) {
             ui->EditCSS->hide();
             ui->WebView->setFocus();
-            ExitFullScreenNextTime = true;
         } else if(ui->WidgetMark->isVisible()) {
-            _aux_switch_GUI_mode(ReadMode);
-            ExitFullScreenNextTime = true;
+            _aux_switchDisplayMode(ReadMode);
+        } else if(ui->MenuBar->isVisible()
+                  || ui->ToolBarNormal->isVisible()
+                  || ui->ToolBarEditor->isVisible() ) {
+            ui->MenuBar->hide();
+            ui->ToolBarNormal->hide();
+            ui->ToolBarEditor->hide();
+        } else if(isFullScreen()) {
+            showNormal();
+        } else {
+            on_ActionFileQuite_triggered();
         }
     }
 
-    if(! menuBar()->isVisible()) {
-        // the menu & the actions is hide, so we have to mapped
-        // the short key here
-
-        if(event->modifiers() & Qt::ShiftModifier & Qt::ControlModifier) {
+    // if the menu & the actions is hide,
+    // we have to mapped the short key here
+    if(false == menuBar()->isVisible())
+    {
+        if(event->modifiers() & Qt::AltModifier) {
+            // hotkey Alt + ?
+            // show the menu widget
+            menuWidget()->show();
+        } else if(event->modifiers() & Qt::ControlModifier) {
             // hotkey Ctrl + Shift + ?
-            switch(event->key()) {
-            case (Qt::Key_E): on_ActionFileExport_triggered();      return;
-            case (Qt::Key_S): on_ActionFileSaveAs_triggered();      return;
-            case (Qt::Key_L): on_ActionInsertLink_triggered();      return;
-            case (Qt::Key_M): on_ActionInsertFormation_triggered(); return;
-            case (Qt::Key_I): on_ActionInsertImage_triggered();     return;
-            default: break;
+            if(event->modifiers() & Qt::ShiftModifier) {
+                switch(event->key()) {
+                case (Qt::Key_E): on_ActionFileExport_triggered();      return;
+                case (Qt::Key_S): on_ActionFileSaveAs_triggered();      return;
+                case (Qt::Key_C): on_ActionEditCopyHTML_triggered();    return;
+                case (Qt::Key_L): on_ActionInsertLink_triggered();      return;
+                case (Qt::Key_M): on_ActionInsertFormation_triggered(); return;
+                case (Qt::Key_I): on_ActionInsertImage_triggered();     return;
+                default: break;
+                }
             }
-        }
-        else if(event->modifiers() & Qt::ControlModifier) {
+
             // hotkey Ctrl + ?
             switch(event->key()) {
             case (Qt::Key_N):            on_ActionFileNew_triggered();         return;
@@ -363,7 +397,6 @@ void GuiWindowSmark::keyPressEvent(QKeyEvent* event)
             case (Qt::Key_F8):  on_ActionViewEditOnly_triggered();    return;
             case (Qt::Key_F11): on_ActionViewFullScreen_triggered();  return;
             case (Qt::Key_F12): on_ActionViewHideMenu_triggered();    return;
-            case (Qt::Key_Alt): on_ActionViewHideMenu_triggered();    return;
             case (Qt::Key_F10): on_ActionViewHideToolbar_triggered(); return;
             case (Qt::Key_F5):  on_ActionEditFlush_triggered();       return;
             default: break;
@@ -375,7 +408,6 @@ void GuiWindowSmark::keyPressEvent(QKeyEvent* event)
 
 void GuiWindowSmark::dragEnterEvent(QDragEnterEvent* event) {
     event->acceptProposedAction();
-    QMainWindow::dragEnterEvent(event);
     if(event->mimeData()->hasUrls()) {
         event->acceptProposedAction();
         event->accept();
@@ -383,20 +415,22 @@ void GuiWindowSmark::dragEnterEvent(QDragEnterEvent* event) {
         event->acceptProposedAction();
         event->accept();
     }
+    QMainWindow::dragEnterEvent(event);
 }
 
 void GuiWindowSmark::dropEvent(QDropEvent* event) {
-    QMainWindow::dropEvent(event);
     QList<QUrl> urls = event->mimeData()->urls();
-    if(! urls.empty()) {
+    if(false == urls.empty()) {
         QString path = urls.first().toLocalFile();
-        if(! _aux_cancel_current_operation())
-            openMarkdownFile(path.toLocal8Bit().data());
+        if(false == _aux_cancelCurrentOperation()) {
+            openMarkdownFile(path);
+        }
     }
+    QMainWindow::dropEvent(event);
 }
 
 void GuiWindowSmark::closeEvent(QCloseEvent* event) {
-    if(! _aux_cancel_current_operation())
+    if(false == _aux_cancelCurrentOperation())
         event->accept();
     else
         event->ignore();
@@ -409,17 +443,17 @@ void GuiWindowSmark::closeEvent(QCloseEvent* event) {
  * ****************************************************************************/
 
 void GuiWindowSmark::on_ActionFileNew_triggered(void) {
-    if(! _aux_cancel_current_operation()) {
+    if(false == _aux_cancelCurrentOperation()) {
         _is_modified = false;
-        _aux_set_current_path(QString());
+        _aux_setCurrentPath(QString());
         ui->WebView->clearHtml();
         ui->EditMark->clear();
-        _aux_enable_GUI();
+        _aux_enableGUI();
     }
 }
 
 void GuiWindowSmark::on_ActionFileOpen_triggered(void) {
-    if(! _aux_cancel_current_operation()) {
+    if(false == _aux_cancelCurrentOperation()) {
         QString path = QFileDialog::getOpenFileName(
                            this,
                            tr("Open File"),
@@ -440,12 +474,13 @@ void GuiWindowSmark::on_ActionFileSave_triggered(void)
                            tr("~/"),
                            tr("markdown files (*.markdown *.md *mkd);; all files (*.*)"));
         if(path.isEmpty()) return;
-        _aux_set_current_path(path);
+        _aux_setCurrentPath(path);
     }
+
     // save current markdown context
     QString error, context;
     context = ui->EditMark->toPlainText();
-    if(! gSaveTextFile(_current_path, context, &error)) {
+    if(false == gSaveTextFile(_current_path, context, &error)) {
         QMessageBox::warning(this, tr("Error"), error);
     } else {
         _is_modified = false;
@@ -466,41 +501,159 @@ void GuiWindowSmark::on_ActionFileSaveAs_triggered(void)
     // save current markdown context
     QString error, context;
     context = ui->EditMark->toPlainText();
-    if(! gSaveTextFile(_current_path, context, &error))
+    if(false == gSaveTextFile(_current_path, context, &error))
         QMessageBox::warning(this, tr("Error"), error);
 }
 
 void GuiWindowSmark::on_ActionFileClose_triggered(void) {
-    if(! _aux_cancel_current_operation()) {
+    if(false == _aux_cancelCurrentOperation()) {
         ui->EditMark->clear();
         ui->WebView->clearHtml();
         _is_modified = false;
-        _aux_set_current_path(QString());
-        _aux_disable_GUI();
+        _aux_setCurrentPath(QString());
+        _aux_disableGUI();
     }
 }
 
 void GuiWindowSmark::on_ActionFileQuite_triggered(void) {
-    qApp->quit();
+    if(false == _aux_cancelCurrentOperation()) {
+        ui->EditMark->clear();
+        ui->WebView->clearHtml();
+        _is_modified = false;
+        _aux_setCurrentPath(QString());
+        _aux_disableGUI();
+        qApp->quit();
+    }
 }
 
 void GuiWindowSmark::on_ActionFileExport_triggered(void)
 {
-    // default html path
-    QFileInfo file_info(_current_path);
-    QString default_path = gFileDir(_current_path);
-    default_path += tr("/");
-    default_path += file_info.completeBaseName() + tr(".html");
-
-    // select a path to save
+    // get export file path
     QString path = QFileDialog::getSaveFileName(
                        this,
                        tr("Export Current Markdown As HTML"),
-                       default_path,
-                       tr("html files (*.html);; all files (*.*)") );
-    if(! path.isEmpty()) {
-        QString context = ui->WebView->page()->mainFrame()->toHtml();
-        gSaveTextFile(path, context);
+                       gDefaultPath(_current_path, ".html"),
+                       tr("HTML files (*.html);;"
+                          "Microsoft Word (*.docx);;"
+                          "Tex Text (*.tex);;"
+                          "OpenOffice ODT (*.odt);;"
+                          "reStructured Text (*.rst);;"
+                          "Wiki Markup (*.wiki);;"
+                          "EPUB ebook (*.epub);;"
+                          "Plain Text (*.txt);;"
+                          "all files (*.*)") );
+    if(path.isEmpty() == false) {
+        QString suffix = gFileSuffix(path);
+        if(suffix == "html") {
+            gSaveTextFile(path, _html);
+            return;
+        } else {
+            QString format;
+            if(suffix == "docx")
+                format = "docx";
+            else if(suffix == "tex")
+                format = "latex";
+            else if(suffix == "odt")
+                format = "odt";
+            else if(suffix == "rst")
+                format = "rst";
+            else if(suffix == "wiki")
+                format = "mediawiki";
+            else if(suffix == "epub")
+                format = "epub";
+            else if(suffix == "txt")
+                format = "plain";
+            else
+                format = "plain";
+            _parser.parse(_current_path, "markdown", path, format, gApp().CSSPath);
+        }
+    }//if..else..
+}
+
+void GuiWindowSmark::on_ActionFileExportHTML_triggered() {
+    QString path = QFileDialog::getSaveFileName(
+                       this,
+                       tr("Export Current Markdown As HTML"),
+                       gDefaultPath(_current_path, ".html"),
+                       tr("HTML files (*.html);; all files (*.*)") );
+    if(path.isEmpty() == false)
+        gSaveTextFile(path, _html);
+}
+
+void GuiWindowSmark::on_ActionFileExportDocx_triggered() {
+    QString path = QFileDialog::getSaveFileName(
+                       this,
+                       tr("Export Current Markdown As Microsoft Word"),
+                       gDefaultPath(_current_path, ".docx"),
+                       tr("Microsoft Word (*.docx);; all files (*.*)") );
+    if(path.isEmpty() == false) {
+        _parser.parse(_current_path, "markdown", path, "docx", gApp().CSSPath);
+    }
+}
+
+void GuiWindowSmark::on_ActionFileExportLaTeX_triggered(void) {
+    QString path = QFileDialog::getSaveFileName(
+                       this,
+                       tr("Export Current Markdown As LaTex File"),
+                       gDefaultPath(_current_path, ".tex"),
+                       tr("Tex Text (*.tex);; all files (*.*)") );
+    if(path.isEmpty() == false) {
+        _parser.parse(_current_path, "markdown", path, "latex", gApp().CSSPath);
+    }
+}
+
+void GuiWindowSmark::on_ActionFileExportOpenOfficeODT_triggered(void) {
+    QString path = QFileDialog::getSaveFileName(
+                       this,
+                       tr("Export Current Markdown As OpenOffice ODT"),
+                       gDefaultPath(_current_path, ".odt"),
+                       tr("OpenOffice ODT (*.odt);; all files (*.*)") );
+    if(path.isEmpty() == false) {
+        _parser.parse(_current_path, "markdown", path, "odt", gApp().CSSPath);
+    }
+}
+
+void GuiWindowSmark::on_ActionFileExportReStructuredText_triggered(void) {
+    QString path = QFileDialog::getSaveFileName(
+                       this,
+                       tr("Export Current Markdown As reStructured Text"),
+                       gDefaultPath(_current_path, ".rst"),
+                       tr("reStructured Text (*.rst);; all files (*.*)") );
+    if(path.isEmpty() == false) {
+        _parser.parse(_current_path, "markdown", path, "rst", gApp().CSSPath);
+    }
+}
+
+void GuiWindowSmark::on_ActionFileExportMediaWikiMarkup_triggered(void) {
+    QString path = QFileDialog::getSaveFileName(
+                       this,
+                       tr("Export Current Markdown As Media Wiki Markup"),
+                       gDefaultPath(_current_path, ".wiki"),
+                       tr("Wiki Markup (*.wiki);; all files (*.*)") );
+    if(path.isEmpty() == false) {
+        _parser.parse(_current_path, "markdown", path, "mediawiki", gApp().CSSPath);
+    }
+}
+
+void GuiWindowSmark::on_ActionFileExportEPUB_triggered(void) {
+    QString path = QFileDialog::getSaveFileName(
+                       this,
+                       tr("Export Current Markdown As EPUB"),
+                       gDefaultPath(_current_path, ".epub"),
+                       tr("EPUB ebook (*.epub);; all files (*.*)") );
+    if(path.isEmpty() == false) {
+        _parser.parse(_current_path, "markdown", path, "epub", gApp().CSSPath);
+    }
+}
+
+void GuiWindowSmark::on_ActionFileExportPlainText_triggered(void) {
+    QString path = QFileDialog::getSaveFileName(
+                       this,
+                       tr("Export Current Markdown As Plain Text"),
+                       gDefaultPath(_current_path, ".txt"),
+                       tr("Text File (*.txt);; all files (*.*)") );
+    if(path.isEmpty() == false) {
+        _parser.parse(_current_path, "markdown", path, "plain", gApp().CSSPath);
     }
 }
 
@@ -511,15 +664,15 @@ void GuiWindowSmark::on_ActionFileExport_triggered(void)
  * ****************************************************************************/
 
 void GuiWindowSmark::on_ActionViewReadOnly_triggered(void) {
-    _aux_switch_GUI_mode(ReadMode);
+    _aux_switchDisplayMode(ReadMode);
 }
 
 void GuiWindowSmark::on_ActionViewEditOnly_triggered(void) {
-    _aux_switch_GUI_mode(EditMode);
+    _aux_switchDisplayMode(EditMode);
 }
 
 void GuiWindowSmark::on_ActionViewPreview_triggered(void) {
-    _aux_switch_GUI_mode(PreviewMode);
+    _aux_switchDisplayMode(PreviewMode);
 }
 
 void GuiWindowSmark::on_ActionViewFullScreen_triggered(void) {
@@ -527,21 +680,25 @@ void GuiWindowSmark::on_ActionViewFullScreen_triggered(void) {
 }
 
 void GuiWindowSmark::on_ActionViewHideMenu_triggered(void) {
-    if(menuWidget()->isVisible())
+    if(menuWidget()->isVisible()) {
         menuWidget()->hide();
-    else
+        gApp().Config.ShowMenu = false;
+    } else {
         menuWidget()->show();
+        gApp().Config.ShowMenu = true;
+    }
 }
 
 void GuiWindowSmark::on_ActionViewHideToolbar_triggered(void) {
-    if(ui->ToolBarNormal->isVisible()
-       || ui->ToolBarEditor->isVisible()) {
+    if(ui->ToolBarNormal->isVisible() || ui->ToolBarEditor->isVisible()) {
         ui->ToolBarNormal->hide();
         ui->ToolBarEditor->hide();
+        gApp().Config.ShowToolbar = false;
     } else {
         ui->ToolBarNormal->show();
         if(ui->EditMark->isVisible())
             ui->ToolBarEditor->show();
+        gApp().Config.ShowToolbar = true;
     }
 }
 
@@ -552,12 +709,16 @@ void GuiWindowSmark::on_ActionViewHideToolbar_triggered(void) {
  * ****************************************************************************/
 
 void GuiWindowSmark::on_ActionEditFlush_triggered(void) {
+    // save the CSS file if need at first
     if(_CSS_is_modified) {
         gApp().CSS = ui->EditCSS->toPlainText();
         ::gSaveTextFile(gApp().CSSPath, gApp().CSS);
         _CSS_is_modified = false;
+        // we must clear the setting of Web View
+        // otherwise the new css will not works
+        ui->WebView->settings()->clearMemoryCaches();
     }
-    _aux_do_parse();
+    _aux_parseMarkdownToHTML();
 }
 
 void GuiWindowSmark::on_ActionEditCut_triggered(void) {
@@ -576,7 +737,7 @@ void GuiWindowSmark::on_ActionEditCopy_triggered(void) {
     } else if(focus == ui->EditCSS) {
         ui->EditCSS->copy();
     } else if(focus == ui->WebView) {
-        QString selected = ui->WebView->selectedText();
+        QString      selected = ui->WebView->selectedText();
         QClipboard* clipboard = QApplication::clipboard();
         clipboard->setText(selected);
     }
@@ -634,6 +795,12 @@ void GuiWindowSmark::on_ActionEditCSS_triggered(void) {
     }
 }
 
+void GuiWindowSmark::on_ActionEditCopyHTML_triggered() {
+    QClipboard* clipboard = QApplication::clipboard();
+    clipboard->setText(_html);
+}
+
+
 /* *****************************************************************************
  *
  *                                  Menu Insert
@@ -664,84 +831,72 @@ void GuiWindowSmark::on_ActionInsertFormation_triggered(void) {
 void GuiWindowSmark::on_ActionFormatBlod_triggered(void) {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedBlod();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatItalic_triggered(void) {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedItalic();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatUnderline_triggered(void) {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedUnderLine();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatBigger_triggered(void) {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedBigger();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatSmaller_triggered(void) {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedSmaller();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatSub_triggered(void) {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedSub();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatSup_triggered(void) {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedSup();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatCode_triggered(void) {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedCode();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatQuote_triggered(void) {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedQuote();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatAlignLeft_triggered() {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedLeftAlign();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatAlignRight_triggered() {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedRightAlign();
-        _aux_do_parse();
     }
 }
 
 void GuiWindowSmark::on_ActionFormatAlignCenter_triggered() {
     if(focusWidget() == ui->EditMark) {
         ui->EditMark->setSelectedCenterAlign();
-        _aux_do_parse();
     }
 }
 
@@ -757,10 +912,10 @@ void GuiWindowSmark::on_ActionHelpAboutQt_triggered(void) {
 
 void GuiWindowSmark::on_ActionHelpAboutSmark_triggered(void) {
     QString about_smark = tr(
-                              "<h1>Smark Editor 1.0</h1>"
-                              "A markdown editor bases on Qt4 & pandoc under LGPL"
+                              "<h1>Smark Editor 1.1</h1>"
+                              "A markdown editor bases on Qt4 & pandoc under GPL"
                               "<br />"
-                              "Copyright @ <a href=\"elerao.ao@gmail.com\">elerao.ao@gmail.com</a> 2013" );
+                              "Copyright @ <a href=\"elerao.ao@gmail.com\">elerao.ao@gmail.com</a> 2013~2014" );
     QMessageBox::about(this, tr("About Smark"), about_smark);
 }
 
@@ -803,32 +958,19 @@ void GuiWindowSmark::on_ReplaceAllButton_clicked(void) {
 void GuiWindowSmark::when_parser_process_finish(void)
 {
     QString context, error;
-    if(! gLoadTextFile(_html_cache, &context, &error)) {
+    if(false == gLoadTextFile(_html_cache_path, &context, &error)) {
         QMessageBox::warning(this, tr("Error"), error);
     } else {
-        // do not use [html = gApp().Template], otherwise
-        // the [reserve(...)] will be invalid...
-        static QString html(16*1024, 0);
-        html.reserve(16*1024);
-        html.clear();
-        html.prepend(gApp().Template);
-
-        // just use MathJax if we need
-        if(-1 != context.indexOf("class=\"math\"")) {
-            html.replace("$$__LOCAL_MATH_JAX_PATH__$$", gApp().MathJaxPath);
-        }
-        html.replace("$$__CSS_TEXT__$$", gApp().CSS);
-        html.replace("$$__HTML_TEXT__$$", context);
-
         // update webview, do not use update()
+        _html.swap(context);
         int position = ui->WebView->scrollValue();
-        ui->WebView->setHtml(html, QUrl::fromLocalFile(_current_path));
+        ui->WebView->setHtml(_html, QUrl::fromLocalFile(_current_path));
         ui->WebView->repaint(ui->WebView->page()->mainFrame()->geometry());
         ui->WebView->setScrollValue(position);
 
         // remove cache file
-        gRemoveFile(_html_cache);
-        gRemoveFile(_mark_cache);
+        gRemoveFile(_html_cache_path);
+        gRemoveFile(_mark_cache_path);
     }
 }
 
@@ -838,3 +980,5 @@ void GuiWindowSmark::when_mark_is_edit(void) {
 void GuiWindowSmark::when_css_is_edit(void) {
     _CSS_is_modified = true;
 }
+
+

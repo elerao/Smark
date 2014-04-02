@@ -25,6 +25,7 @@ SOURCES += main.cpp \
     GuiMarkEdit.cpp \
     GuiWindowSmark.cpp
 
-RESOURCES += rs/icon.qrc
+RESOURCES += rs/icon.qrc \
+    rs/file.qrc
 
 RC_FILE += rs/LOGO.rc

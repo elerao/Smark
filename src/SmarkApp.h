@@ -10,6 +10,21 @@ enum SmarkMode {
     PreviewMode = 2
 };
 
+struct SmarkConfig
+{
+public:
+    SmarkMode StartMode;
+    bool      ShowMenu;
+    bool      ShowToolbar;
+public:
+    SmarkConfig(void)
+        : StartMode(ReadMode),
+          ShowMenu(true),
+          ShowToolbar(true) {
+        /*nothing need to do*/
+    }
+};
+
 class SmarkApp
 {
     friend SmarkApp& gApp(void);
@@ -17,18 +32,20 @@ class SmarkApp
 private:
 
     SmarkApp(void);
+    ~SmarkApp(void);
 
 public:
 
-    QDir          BinDir;
-    QDir          ShareDir;
-    QString       StartPath;
-    QDir          StartDir;
-    QString       CSSPath;
-    QString       Template;
+    QDir BinaryDir;
+    QDir StartDir;
+    QDir CacheDir;
+
+    QString StartPath;
+    QString CSSPath;
+    QString ConfigPath;
+
     QString       CSS;
-    QString       MathJaxPath;
-    SmarkMode     CurrentMode;
+    SmarkConfig   Config;
 };
 
 SmarkApp& gApp(void);

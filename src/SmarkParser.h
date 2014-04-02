@@ -19,7 +19,14 @@ public:
 
     SmarkParser(QObject *parent = 0);
     virtual ~SmarkParser(void);
-    void parseMarkToHtml(const QString& mark_path, const QString& html_path);
+
+    void parseMarkToHtml(const QString& markPath,
+                         const QString& htmlPath,
+                         const QString& cssPath);
+
+    void parse(const QString& inPath,  const QString& inFormat,
+               const QString& outPath, const QString& outFormat,
+               const QString& cssPath);
 
 signals:
 
@@ -27,6 +34,7 @@ signals:
 
 private slots:
 
+    void when_mark_to_html_finished(void);
     void when_parser_finished(void);
 };
 

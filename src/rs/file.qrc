@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>file/docx.png</file>
+        <file>file/epub.png</file>
+        <file>file/html.png</file>
+        <file>file/latex.png</file>
+        <file>file/markdown.png</file>
+        <file>file/odt.png</file>
+        <file>file/rst.png</file>
+        <file>file/txt.png</file>
+        <file>file/wiki.png</file>
+    </qresource>
+</RCC>

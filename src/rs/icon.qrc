@@ -39,5 +39,6 @@
         <file>icon/align-center.png</file>
         <file>icon/align-left.png</file>
         <file>icon/align-right.png</file>
+        <file>icon/edit-copy-html.png</file>
     </qresource>
 </RCC>

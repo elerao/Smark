@@ -90,7 +90,7 @@ void GuiMarkEdit::replaceAll(const QString& old_text,
 void GuiMarkEdit::_aux_set_words_format(const QString& before,
                                         const QString& after ) {
     QTextCursor cursor = this->textCursor();
-    QString selected =  cursor.selectedText();
+    QString   selected = cursor.selectedText();
     if(selected.startsWith(before) && selected.endsWith(after)) {
         selected.remove(before);
         selected.remove(after);
@@ -154,8 +154,8 @@ void GuiMarkEdit::setSelectedSmaller(void) {
 
 void GuiMarkEdit::setSelectedOrderedList(void) {
     QTextCursor cursor = this->textCursor();
-    QString selected =  cursor.selectedText();
-    QStringList lines = selected.split(LineSeparator);
+    QString   selected = cursor.selectedText();
+    QStringList  lines = selected.split(LineSeparator);
     int list_num = 1;
     for(QStringList::iterator it=lines.begin(); it!=lines.end(); ++it) {
         if(! it->isEmpty()) {
@@ -190,14 +190,14 @@ void GuiMarkEdit::setSelectedCenterAlign(void) {
 void GuiMarkEdit::insertImage(void) {
     QTextCursor cursor = this->textCursor();
     cursor.insertText("<p align=\"center\">\n"
-                      "    <image src=\"____\" width=\"60%\">\n"
+                      "    <img src=\"____\" width=\"60%\">\n"
                       "    <small> tittle </small>\n"
                       "</p>");
 }
 
 void GuiMarkEdit::insertLink(void) {
     QTextCursor cursor = this->textCursor();
-    QString selected =  cursor.selectedText();
+    QString selected   = cursor.selectedText();
     if(selected.isEmpty()) {
         cursor.insertText("[___](___)");
     } else {
@@ -206,18 +206,33 @@ void GuiMarkEdit::insertLink(void) {
         cursor.insertText(selected);
     }
 }
+
 void GuiMarkEdit::insertFormation(void) {
     QTextCursor cursor = this->textCursor();
-    QString selected =  cursor.selectedText();
-    if(selected.isEmpty()) {
-        cursor.insertText("<center>$${\n"
-                          "     _____\n"
-                          "}$$</center>");
+    QString   selected = cursor.selectedText();
+    if(cursor.atBlockStart()) {
+        // the cursor is at the start of a block
+        // insert a center align math formation
+        if(selected.isEmpty()) {
+            cursor.insertText("<center>$$\n"
+                              "_____\n"
+                              "$$</center>");
+        } else {
+            selected.prepend("<center>$$\n");
+            selected.append("$$</center>");
+            cursor.insertText(selected);
+        }
     } else {
-        selected.prepend(" ${ ");
-        selected.append(" }$ ");
-        cursor.insertText(selected);
-    }
+        // the cursor is not at the start of a block
+        // insert a inline math formation
+        if(selected.isEmpty()) {
+            cursor.insertText("${ ____ }$");
+        } else {
+            selected.prepend("${ ");
+            selected.append(" }$");
+            cursor.insertText(selected);
+        }
+    }//if(cursor.atBlockStart()...
 }
 
 /* *****************************************************************************
@@ -232,16 +247,17 @@ void GuiMarkEdit::keyPressEvent(QKeyEvent* event)
     if(event->key() == Qt::Key_Tab) {
         QTextCursor cursor = this->textCursor();
         if(cursor.hasSelection()) {
-            QString selected = cursor.selectedText();
+            QString  selected = cursor.selectedText();
             QStringList lines = selected.split(LineSeparator);
-            QStringList::iterator it;
-            if(event->modifiers() & Qt::ControlModifier) {
-                // Ctrl + Tab, remove an indentation
-                for(it=lines.begin(); it!=lines.end(); ++it)
+            bool inverse_operation = (event->modifiers() & Qt::ControlModifier) ||
+                                     (event->modifiers() & Qt::ShiftModifier);
+            if( inverse_operation ) {
+                // [Ctrl + Tab] or [Shift + Tab], remove an indentation
+                for(QStringList::iterator it=lines.begin(); it!=lines.end(); ++it)
                     if(it->startsWith("    ")) it->remove(0, 4);
             } else {
                 // Only Tab, add an indentation
-                for(it=lines.begin(); it!=lines.end(); ++it)
+                for(QStringList::iterator it=lines.begin(); it!=lines.end(); ++it)
                     if(! it->isEmpty()) it->prepend("    ");
             }
             cursor.insertText(lines.join(LineSeparator));
@@ -253,4 +269,3 @@ void GuiMarkEdit::keyPressEvent(QKeyEvent* event)
     }
     QPlainTextEdit::keyPressEvent(event);
 }
-

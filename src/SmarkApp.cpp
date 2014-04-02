@@ -4,9 +4,13 @@
 #include "SmarkApp.h"
 #include "SmarkFileIO.h"
 
-SmarkApp::SmarkApp(void)
-    : CurrentMode(ReadMode) {
+SmarkApp::SmarkApp(void) {
     /* nothing need to do */
+}
+
+SmarkApp::~SmarkApp(void) {
+    gSaveTextFile(CSSPath, CSS);
+    gSaveConfigFile(ConfigPath, Config);
 }
 
 SmarkApp& gApp(void) {
@@ -20,23 +24,29 @@ void gInitApp(int argc, char** argv) {
     for(int i=0; i<argc; ++i)
         Arg.append(QString::fromLocal8Bit(argv[i]));
 
-    // get bin path and load css ...
-    QFileInfo bin_file(Arg[0]);
-    gApp().BinDir      = bin_file.dir();
-    gApp().ShareDir    = QDir(bin_file.path() + QString("/share/"));
-    gApp().CSSPath     = bin_file.path() + QString("/share/smark.css");
-    gLoadTextFile(gApp().CSSPath,     &(gApp().CSS));
-
-    QString TemplatePath = bin_file.path() + QString("/share/template.html");
-    gLoadTextFile(TemplatePath, &(gApp().Template));
-
-    QString MathJaxPath = bin_file.path() + QString("/share/mathjax.config");
-    gLoadTextFile(MathJaxPath, &(gApp().MathJaxPath));
+    // binary file path
+    QFileInfo binaryFileInfo(Arg[0]);
+    gApp().BinaryDir = binaryFileInfo.dir();
 
     // markdown file path
     if(argc > 1) {
-        QFileInfo start_file(Arg[1]);
-        gApp().StartDir  = start_file.dir();
-        gApp().StartPath = start_file.filePath();
+        QFileInfo startFileInfo(Arg[1]);
+        gApp().StartDir  = startFileInfo.dir();
+        gApp().StartPath = startFileInfo.filePath();
     }
+
+#ifdef _WIN32
+    gApp().CacheDir   = QDir(binaryFileInfo.path());
+    gApp().CSSPath    = binaryFileInfo.path() + "/share/smark.css";
+    gApp().ConfigPath = binaryFileInfo.path() + "/share/smark.config";
+#else
+    // the users may not have the right to write or read a file to the
+    // dir $$binaryFileInfo.dir()$$/share if they are not a root user
+    gApp().CacheDir   = QDir("~/.tmp/");
+    gApp().CSSPath    = "~/.share/smark.css";
+    gApp().ConfigPath = "~/.share/smark.config";
+#endif
+
+    gLoadTextFile(gApp().CSSPath, &(gApp().CSS));
+    gApp().Config = gLoadConfigFile(gApp().ConfigPath);
 }
