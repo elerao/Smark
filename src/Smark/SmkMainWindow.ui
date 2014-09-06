@@ -1,0 +1,809 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SmkMainWindow</class>
+ <widget class="QMainWindow" name="SmkMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1113</width>
+    <height>686</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Consolas</family>
+    <pointsize>8</pointsize>
+    <weight>50</weight>
+    <bold>false</bold>
+    <stylestrategy>PreferAntialias</stylestrategy>
+    <kerning>true</kerning>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Smark</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="rc/icon.qrc">
+    <normaloff>:/LOGO.png</normaloff>:/LOGO.png</iconset>
+  </property>
+  <widget class="QWidget" name="widget">
+   <property name="font">
+    <font>
+     <family>Consolas</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+     <stylestrategy>PreferAntialias</stylestrategy>
+     <kerning>true</kerning>
+    </font>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <property name="horizontalSpacing">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="childrenCollapsible">
+       <bool>true</bool>
+      </property>
+      <widget class="SmkHtmlWidget" name="htmlView" native="true"/>
+      <widget class="QWidget" name="layoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="SmkMarkWidget" name="markView"/>
+        </item>
+        <item>
+         <widget class="QWidget" name="widgetFind" native="true">
+          <layout class="QGridLayout" name="gridLayout_3">
+           <property name="leftMargin">
+            <number>2</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>2</number>
+           </property>
+           <property name="bottomMargin">
+            <number>2</number>
+           </property>
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item row="0" column="0" colspan="3">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <property name="spacing">
+              <number>1</number>
+             </property>
+             <item>
+              <widget class="QLineEdit" name="lineEditFind"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonFindPrev">
+               <property name="text">
+                <string>Preview</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonFindNext">
+               <property name="text">
+                <string>Next</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="checkBoxCase">
+             <property name="text">
+              <string>Case-sensitive</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="checkBoxWholeWord">
+             <property name="text">
+              <string>Whole word match</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>147</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="0" colspan="3">
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="spacing">
+              <number>1</number>
+             </property>
+             <item>
+              <widget class="QLineEdit" name="lineEditReplace"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonReplace">
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Replace</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonReplaceAll">
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Replace All</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+          <zorder>checkBoxCase</zorder>
+          <zorder>horizontalSpacer</zorder>
+          <zorder>checkBoxWholeWord</zorder>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1113</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Consolas</family>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File (&amp;F)</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionPrint"/>
+    <addaction name="actionOption"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuite"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View (&amp;V)</string>
+    </property>
+    <addaction name="actionReadOnly"/>
+    <addaction name="actionPreview"/>
+    <addaction name="actionEditOnly"/>
+    <addaction name="separator"/>
+    <addaction name="actionFullScreen"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit (&amp;E)</string>
+    </property>
+    <addaction name="actionFlush"/>
+    <addaction name="actionViewHTML"/>
+    <addaction name="separator"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionCut"/>
+    <addaction name="actionPaste"/>
+    <addaction name="separator"/>
+    <addaction name="actionRedo"/>
+    <addaction name="actionUndo"/>
+    <addaction name="separator"/>
+    <addaction name="actionFind"/>
+   </widget>
+   <widget class="QMenu" name="menuFormat">
+    <property name="title">
+     <string>Format (&amp;F)</string>
+    </property>
+    <addaction name="actionFormatBlod"/>
+    <addaction name="actionFormatItalic"/>
+    <addaction name="actionFormatUnderline"/>
+    <addaction name="separator"/>
+    <addaction name="actionFormatBigger"/>
+    <addaction name="actionFormatSmaller"/>
+    <addaction name="separator"/>
+    <addaction name="actionFormatSub"/>
+    <addaction name="actionFormatSup"/>
+    <addaction name="separator"/>
+    <addaction name="actionFormatCode"/>
+    <addaction name="actionFormatQuote"/>
+    <addaction name="separator"/>
+    <addaction name="actionAlignLeft"/>
+    <addaction name="actionAlignRight"/>
+    <addaction name="actionAlignCenter"/>
+   </widget>
+   <widget class="QMenu" name="menuInsert">
+    <property name="title">
+     <string>Insert (&amp;I)</string>
+    </property>
+    <addaction name="actionInsertImage"/>
+    <addaction name="actionInsertLink"/>
+    <addaction name="actionInsertMathJax"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help (&amp;H)</string>
+    </property>
+    <addaction name="actionAboutQt"/>
+    <addaction name="actionAboutSmark"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuView"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuInsert"/>
+   <addaction name="menuFormat"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>Tool Bar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>16</width>
+     <height>16</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNew"/>
+   <addaction name="actionOpen"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionSaveAs"/>
+   <addaction name="actionClose"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrint"/>
+   <addaction name="actionOption"/>
+   <addaction name="separator"/>
+   <addaction name="actionPreview"/>
+   <addaction name="actionReadOnly"/>
+   <addaction name="actionEditOnly"/>
+   <addaction name="actionFullScreen"/>
+   <addaction name="separator"/>
+   <addaction name="actionFlush"/>
+   <addaction name="actionViewHTML"/>
+   <addaction name="separator"/>
+   <addaction name="actionRedo"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionFind"/>
+   <addaction name="separator"/>
+   <addaction name="actionCut"/>
+   <addaction name="actionCopy"/>
+   <addaction name="actionPaste"/>
+   <addaction name="separator"/>
+   <addaction name="actionInsertImage"/>
+   <addaction name="actionInsertLink"/>
+   <addaction name="actionInsertMathJax"/>
+   <addaction name="separator"/>
+   <addaction name="actionFormatBlod"/>
+   <addaction name="actionFormatItalic"/>
+   <addaction name="actionFormatUnderline"/>
+   <addaction name="actionFormatCode"/>
+   <addaction name="actionFormatQuote"/>
+   <addaction name="separator"/>
+   <addaction name="actionFormatBigger"/>
+   <addaction name="actionFormatSmaller"/>
+   <addaction name="separator"/>
+   <addaction name="actionFormatSub"/>
+   <addaction name="actionFormatSup"/>
+   <addaction name="separator"/>
+   <addaction name="actionAlignRight"/>
+   <addaction name="actionAlignCenter"/>
+   <addaction name="actionAlignLeft"/>
+   <addaction name="separator"/>
+  </widget>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/file-new.png</normaloff>:/icon/file-new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/file-open.png</normaloff>:/icon/file-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/file-save.png</normaloff>:/icon/file-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/file-saveas.png</normaloff>:/icon/file-saveas.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save As</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/file-close.png</normaloff>:/icon/file-close.png</iconset>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/print.png</normaloff>:/icon/print.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionQuite">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/file-quite.png</normaloff>:/icon/file-quite.png</iconset>
+   </property>
+   <property name="text">
+    <string>Quite</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionPreview">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/view-preview.png</normaloff>:/icon/view-preview.png</iconset>
+   </property>
+   <property name="text">
+    <string>Preview</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
+   </property>
+  </action>
+  <action name="actionReadOnly">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/view-read-only.png</normaloff>:/icon/view-read-only.png</iconset>
+   </property>
+   <property name="text">
+    <string>Read Only</string>
+   </property>
+   <property name="shortcut">
+    <string>F7</string>
+   </property>
+  </action>
+  <action name="actionEditOnly">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/view-edit-only.png</normaloff>:/icon/view-edit-only.png</iconset>
+   </property>
+   <property name="text">
+    <string>Edit Only</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
+   </property>
+  </action>
+  <action name="actionFullScreen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/view-fullscreen.png</normaloff>:/icon/view-fullscreen.png</iconset>
+   </property>
+   <property name="text">
+    <string>Full Screen</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
+   </property>
+  </action>
+  <action name="actionFlush">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/edit-flush.png</normaloff>:/icon/edit-flush.png</iconset>
+   </property>
+   <property name="text">
+    <string>Flush</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/edit-cut.png</normaloff>:/icon/edit-cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cut</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/edit-copy.png</normaloff>:/icon/edit-copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/edit-paste.png</normaloff>:/icon/edit-paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/edit-undo.png</normaloff>:/icon/edit-undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/edit-redo.png</normaloff>:/icon/edit-redo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionFind">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/edit-find.png</normaloff>:/icon/edit-find.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionViewHTML">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/edit-view-html.png</normaloff>:/icon/edit-view-html.png</iconset>
+   </property>
+   <property name="text">
+    <string>View HTML Source</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
+   </property>
+  </action>
+  <action name="actionFormatBlod">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/format-blod.png</normaloff>:/icon/format-blod.png</iconset>
+   </property>
+   <property name="text">
+    <string>Blod</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionFormatItalic">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/format-italic.png</normaloff>:/icon/format-italic.png</iconset>
+   </property>
+   <property name="text">
+    <string>Italic</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionFormatUnderline">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/format-underline.png</normaloff>:/icon/format-underline.png</iconset>
+   </property>
+   <property name="text">
+    <string>Under Line </string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionFormatBigger">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/format-bigger.png</normaloff>:/icon/format-bigger.png</iconset>
+   </property>
+   <property name="text">
+    <string>Bigger</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+]</string>
+   </property>
+  </action>
+  <action name="actionFormatSmaller">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/format-smaller.png</normaloff>:/icon/format-smaller.png</iconset>
+   </property>
+   <property name="text">
+    <string>Smaller</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+[</string>
+   </property>
+  </action>
+  <action name="actionFormatSub">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/format-sub.png</normaloff>:/icon/format-sub.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sub</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Down</string>
+   </property>
+  </action>
+  <action name="actionFormatSup">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/format-sup.png</normaloff>:/icon/format-sup.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sup</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Up</string>
+   </property>
+  </action>
+  <action name="actionFormatCode">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/format-code.png</normaloff>:/icon/format-code.png</iconset>
+   </property>
+   <property name="text">
+    <string>Code</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+`</string>
+   </property>
+  </action>
+  <action name="actionFormatQuote">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/format-quote.png</normaloff>:/icon/format-quote.png</iconset>
+   </property>
+   <property name="text">
+    <string>Quote</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+'</string>
+   </property>
+  </action>
+  <action name="actionAlignLeft">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/align-left.png</normaloff>:/icon/align-left.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align Left</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionAlignRight">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/align-right.png</normaloff>:/icon/align-right.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align Right</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionAlignCenter">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/align-center.png</normaloff>:/icon/align-center.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align Center</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionInsertImage">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/insert-image.png</normaloff>:/icon/insert-image.png</iconset>
+   </property>
+   <property name="text">
+    <string>Image</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+I, Ctrl+Shift+P</string>
+   </property>
+  </action>
+  <action name="actionInsertLink">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/insert-link.png</normaloff>:/icon/insert-link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Link</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+L</string>
+   </property>
+  </action>
+  <action name="actionInsertMathJax">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/insert-formation.png</normaloff>:/icon/insert-formation.png</iconset>
+   </property>
+   <property name="text">
+    <string>MathJax</string>
+   </property>
+   <property name="toolTip">
+    <string>MathJax</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+M</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionAboutSmark">
+   <property name="text">
+    <string>About Smark</string>
+   </property>
+  </action>
+  <action name="actionOption">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/file-option.png</normaloff>:/icon/file-option.png</iconset>
+   </property>
+   <property name="text">
+    <string>Option</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SmkMarkWidget</class>
+   <extends>QPlainTextEdit</extends>
+   <header location="global">Smark/SmkMarkWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SmkHtmlWidget</class>
+   <extends>QWidget</extends>
+   <header>Smark/SmkHtmlWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="rc/icon.qrc"/>
+ </resources>
+ <connections/>
+</ui>
