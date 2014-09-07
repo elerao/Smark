@@ -244,7 +244,4 @@ void SmkOptionDialog::on_buttonBox_accepted()
     qSmkApp()->setOption("text.hat",    ui->textEditHat->toPlainText());
     qSmkApp()->setOption("text.tail",   ui->textEditTail->toPlainText());
     qSmkApp()->setOption("text.foot",   ui->textEditFoot->toPlainText());
-
-    // save options to the file
-    qSmkApp()->saveOption();
 }

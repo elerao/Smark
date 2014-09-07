@@ -460,8 +460,12 @@ void SmkMainWindow::on_actionOption_triggered() {
     SmkOptionDialog dialog(this);
     if(dialog.exec() == QDialog::Accepted) {
         ui->markView->updateOption();
-        ui->htmlView->settings()->clearMemoryCaches();
-        _aux_parseMarkdownToHTML();
+        // 不更新 HTML 视图，由用户自己刷新
+        // ui->htmlView->settings()->clearMemoryCaches();
+        // _aux_parseMarkdownToHTML();
+
+        // 确定之后再保存文件设置
+        qSmkApp()->saveOption();
     }
 }
 
