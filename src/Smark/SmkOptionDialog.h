@@ -30,6 +30,8 @@ private slots:
     void on_buttonCSSURL_clicked();
     void on_buttonMathJaxURL_clicked();
     void on_buttonBox_accepted();
+    void on_lineEditCSSURL_textEdited(const QString& arg);
+    void on_lineEditMathJaxURL_textEdited(const QString& arg);
 
 private:
 

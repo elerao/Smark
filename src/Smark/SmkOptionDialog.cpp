@@ -92,11 +92,23 @@ void SmkOptionDialog::initGui()
 
     // URL setting
     QString cssURL = qSmkApp()->option("url.css");
+    if(QFileInfo(cssURL).exists()==false && cssURL.startsWith("http")==false) {
+        // 如果 cssURL 不存在则将其标记为红色
+        QPalette palette = ui->lineEditCSSURL->palette();
+        palette.setColor(QPalette::Text, Qt::red);
+        ui->lineEditCSSURL->setPalette(palette);
+    }
     if(cssURL.startsWith(qSmkApp()->applicationDirPath()))
         cssURL.replace(qSmkApp()->applicationDirPath(), ".");
     ui->lineEditCSSURL->setText(cssURL);
 
     QString mathJaxURL = qSmkApp()->option("url.mathjax");
+    if(QFileInfo(mathJaxURL).exists()==false && mathJaxURL.startsWith("http")==false) {
+        // 如果 MathJaxURL 不存在则将其标记为红色
+        QPalette palette = ui->lineEditMathJaxURL->palette();
+        palette.setColor(QPalette::Text, Qt::red);
+        ui->lineEditMathJaxURL->setPalette(palette);
+    }
     if(mathJaxURL.startsWith(qSmkApp()->applicationDirPath()))
         mathJaxURL.replace(qSmkApp()->applicationDirPath(), ".");
     ui->lineEditMathJaxURL->setText(mathJaxURL);
@@ -244,4 +256,36 @@ void SmkOptionDialog::on_buttonBox_accepted()
     qSmkApp()->setOption("text.hat",    ui->textEditHat->toPlainText());
     qSmkApp()->setOption("text.tail",   ui->textEditTail->toPlainText());
     qSmkApp()->setOption("text.foot",   ui->textEditFoot->toPlainText());
+}
+
+void SmkOptionDialog::on_lineEditCSSURL_textEdited(const QString& arg) {
+    QString url = arg;
+    if(url.startsWith("./"))
+        url.replace(0, 1, qSmkApp()->applicationDirPath());
+    if(QFileInfo(url).exists() || url.startsWith("http")) {
+        // 如果 url 对应的文件存在或为在线文件则恢复其为默认颜色
+        QPalette palette = this->palette();
+        ui->lineEditCSSURL->setPalette(palette);
+    } else {
+        // 如果 url 对应的文件不存在则将其标记为红色
+        QPalette palette = ui->lineEditCSSURL->palette();
+        palette.setColor(QPalette::Text, Qt::red);
+        ui->lineEditCSSURL->setPalette(palette);
+    }
+}
+
+void SmkOptionDialog::on_lineEditMathJaxURL_textEdited(const QString& arg) {
+    QString url = arg;
+    if(url.startsWith("./"))
+        url.replace(0, 1, qSmkApp()->applicationDirPath());
+    if(QFileInfo(url).exists() || url.startsWith("http")) {
+        // 如果 url 对应的文件存在或为在线文件则恢复其为默认颜色
+        QPalette palette = this->palette();
+        ui->lineEditCSSURL->setPalette(palette);
+    } else {
+        // 如果 url 对应的文件不存在则将其标记为红色
+        QPalette palette = ui->lineEditCSSURL->palette();
+        palette.setColor(QPalette::Text, Qt::red);
+        ui->lineEditCSSURL->setPalette(palette);
+    }
 }
