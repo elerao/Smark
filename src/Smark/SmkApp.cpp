@@ -30,20 +30,37 @@ SmkApp::SmkApp(int & argc, char** argv)
         options_["color.html"]       = "#88cc00";
         options_["color.link"]       = "#00ffcc";
 
-        options_["text.head"]   = "";
+#ifdef SMK_WINDOWS_PLATFORM
+        // 部分 Windows 系统下 Qt WebView 中 MathJAx 公式字体过小
+        options_["text.head"]   = "<style type=\"text/css\">"
+                                  "\n  span.MathJax_SVG { zoom : 1.6; }"
+                                  "\n</style>";
+#else
+        options_["text.head"] = "";
+#endif
         options_["text.hat"]    = "";
         options_["text.tail"]   = "";
         options_["text.foot"]   = "";
 
-        options_["url.mathjax"] = "http://cdn.mathjax.org/mathjax/latest/MathJax.js";
-        options_["url.css"]     = qSmkApp()->applicationDirPath() + "/smark.css";
+        // 如果本地的 MathJax.js 存在就不使用 http://cdn.mathjax.org 的 MathJax.js
+        QString localMathJaxUrl = qSmkApp()->applicationDirPath() + "/mathjax/MathJax.js";
+        if(QFileInfo(localMathJaxUrl).exists())
+            options_["url.mathjax"] = localMathJaxUrl;
+        else
+            options_["url.mathjax"] = "http://cdn.mathjax.org/mathjax/latest/MathJax.js";
+
+        // 如果本地的 smark.css 不存在就使用我博客上的在线 css，目前二者是一样的
+        QString localCSSUrl = qSmkApp()->applicationDirPath() + "/smark.css";
+        if(QFileInfo(localCSSUrl).exists())
+            options_["url.css"] = localCSSUrl;
+        else
+            options_["url.css"] = "http://elerao.github.io/css/page.css";
     } else {
         // 配置文件存在，载入配置文件中的设置
         // the config file is there, load the options in the option file
         QDataStream stream(&optionFile);
         stream >> options_;
     }
-    qDebug() << "Style : " << QStyleFactory::keys();
     setStyle(options_["gui.style"]);
 }
 
