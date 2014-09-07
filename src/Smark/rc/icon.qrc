@@ -42,5 +42,6 @@
         <file>icon/edit-copy-html.png</file>
         <file>icon/print.png</file>
         <file>icon/edit-view-html.png</file>
+        <file>MD.png</file>
     </qresource>
 </RCC>

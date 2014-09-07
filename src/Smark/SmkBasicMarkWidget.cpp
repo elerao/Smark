@@ -136,6 +136,7 @@ void SmkBasicMarkWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
     }
 
     QPainter painter(pLineNumberArea_);
+    painter.setRenderHint(QPainter::TextAntialiasing, true);
     painter.fillRect(event->rect(), numberBkgColor);
 
     QTextBlock block = firstVisibleBlock();
