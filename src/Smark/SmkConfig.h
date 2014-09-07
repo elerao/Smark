@@ -13,7 +13,7 @@
 #include <QtPrintSupport/QPrintDialog>
 #endif
 
-#define SMK_VERSION "smark 2.0"
+#define SMK_VERSION "smark 2.0.1"
 
 #ifdef _WIN32
 # define SMK_WINDOWS_PLATFORM
