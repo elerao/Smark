@@ -1,6 +1,6 @@
 # 简洁的 Markdown 编辑器 Smark
 
-<p><img align="left" src="./README/logo.png" width="100"></p>
+<p><img align="left" src="https://raw.githubusercontent.com/elerao/Smark/master/README/logo.png" width="100"></p>
 
 说白了只是为了自己方便使用，并没什么新奇的东西。我使用 [pandoc](http://johnmacfarlane.net/pandoc/) 来转化 `markdown`，但是我不想在修改文件时总是在编辑器、文字终端和浏览器间换来换去，因此我写了一个简单的编辑器，它在后台调用 `pandoc` 将当前编辑的 `markdown` 内容转化为 `HTML`，而后将 `HTML` 在 `smark` 中的浏览器中显示出来，就是这么回事。Smark 依赖于 [`pandoc`](http://johnmacfarlane.net/pandoc/)、[`Qt 4.8`](http://qt-project.org/) 和 [`MathJax`](http://www.mathjax.org)，在此向上述软件包开发者们致敬。请注意继承于 pandoc 的发布协议，Smark 同样遵循 [GPL](http://www.gnu.org/copyleft/gpl.html)，如有任何疑问请联系 [elerao.ao@gmail.com](elerao.ao@gmail.com)，我将尽快做出回复。
 
@@ -36,10 +36,10 @@
 ## Smark 的运行截图
 
 <p align="center">
-<br/><img src="./README/screenshot.png" width="95%">
+<br/><img src="https://raw.githubusercontent.com/elerao/Smark/master/README/screenshot.png" width="95%">
 <br/>Windows 7 下的 Smark 运行截图
 <br/>
-<br/><img src="./README/option-dialog.png" width="95%">
+<br/><img src="https://raw.githubusercontent.com/elerao/Smark/master/README/option-dialog.png" width="95%">
 <br/>Windows 7 下的 Smark 配置选项对话框
 </p>
 
