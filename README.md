@@ -16,7 +16,11 @@
 
 ## 安装 Smark
 
- 对于 `Windows` 平台，您可以直接下载当前版本的可执行程序 [Smark-X.X-Win32-portable.zip](http://pan.baidu.com/s/1ntMCVFV)。对于其它平台的用户，可以下载当前版本的 Smark 源代码 [Smark-X.X-src.zip](http://pan.baidu.com/s/1ntMCVFV)在本平台上进行编译即可，一般地您可以按照如下步骤编译 `Smark`：
+对于 `Win32` 平台的用户，您可以直接下载当前版本的可执行程序 [Smark-X.X-Win32-portable.zip](http://pan.baidu.com/s/1ntMCVFV)。
+
+对于 `64` 位的 `Windows` 用户，请从 `pandoc` 官方网站上下载 64 位的 `pandoc.exe` 替换 [Smark-X.X-Win32-portable.zip](http://pan.baidu.com/s/1ntMCVFV) 中自带的 32 位的 `pandoc.exe`， 或下载 [pandoc-1.xx.x.msi](https://code.google.com/p/pandoc/downloads/list?can=1&q=&colspec=Filename+Summary+Uploaded+ReleaseDate+Size+DownloadCount) 直接安装 64 位的 `pandoc` 而删除 [Smark-X.X-Win32-portable.zip](http://pan.baidu.com/s/1ntMCVFV) 中自带的 32 位的 `pandoc.exe`。
+
+对于其它平台的用户，可以下载当前版本的 Smark 源代码 [Smark-X.X-src.zip](http://pan.baidu.com/s/1ntMCVFV)在本平台上进行编译即可，一般地您可以按照如下步骤编译 `Smark`：
 
  1. 安装依赖的程序包:
 
