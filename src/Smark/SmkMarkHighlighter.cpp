@@ -31,10 +31,10 @@ void SmkMarkHighlighter::updateOption(void)
     format_.append(italicFormat);
     regexp_.append(QRegExp("<italic>.*</italic>"));
 
-    QTextCharFormat codeFormat;
-    codeFormat.setForeground(QColor(qSmkApp()->option("color.code")));
-    format_.append(codeFormat);
-    regexp_.append(QRegExp("^    .*"));
+    // QTextCharFormat codeFormat;
+    // codeFormat.setForeground(QColor(qSmkApp()->option("color.code")));
+    // format_.append(codeFormat);
+    // regexp_.append(QRegExp("^    .*"));
 
     QTextCharFormat linkFormat;
     linkFormat.setForeground(QColor(qSmkApp()->option("color.link")));

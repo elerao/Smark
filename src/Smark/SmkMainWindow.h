@@ -105,6 +105,9 @@ private slots:
     void on_buttonReplace_clicked();
     void on_buttonReplaceAll_clicked();
 
+    // 光标移动时同步两个视图
+    void on_markView_cursorPositionChanged();
+
     // 后台调用 Pandoc 相关
     void when_parser_process_finish(void);
     void when_mark_is_edit(void);

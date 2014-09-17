@@ -5,7 +5,6 @@ TARGET   = smark
 QT       += widgets webkit webkitwidgets
 INCLUDEPATH += . src
 DEPENDPATH  += . src
-
 # Input File ###################################################################
 
 HEADERS += \

@@ -62,21 +62,23 @@ SmkMarkParser::~SmkMarkParser(void) {
 //! 将路径为 markPath 的 markdown 文件转换为
 //! 路径为 htmlPath 的 html 格式文件
 //! 使用路径为 cssPath 的 stylesheet 文件
-void SmkMarkParser::parseMarkToHtml(const QString& markPath,
+bool SmkMarkParser::parseMarkToHtml(const QString& markPath,
                                     const QString& htmlPath,
                                     const QString& cssPath ) {
     if(parserThread_ == NULL) {
         parserThread_ = new SmkPrivate::PandocThread(markPath, htmlPath, cssPath);
         connect(parserThread_, SIGNAL(finished()),
-                this,           SLOT(when_mark_to_html_finished()) );
+                this,          SLOT(when_mark_to_html_finished()) );
         parserThread_->start();
+        return true;
     }
+    return false;
 }
 
 //! 将路径为 markPath 的 inFormat 格式文件转换为
 //! 路径为 htmlPath 的 outFormat 格式文件
 //! 使用路径为 cssPath 的 stylesheet 文件
-void SmkMarkParser::parse(const QString& inPath,  const QString& inFormat,
+bool SmkMarkParser::parse(const QString& inPath,  const QString& inFormat,
                           const QString& outPath, const QString& outFormat,
                           const QString& cssPath ) {
     if(parserThread_ == NULL) {
@@ -84,16 +86,18 @@ void SmkMarkParser::parse(const QString& inPath,  const QString& inFormat,
                                                      outPath, outFormat,
                                                      cssPath);
         connect(parserThread_, SIGNAL(finished()),
-                this,           SLOT(when_parser_finished()) );
+                this,          SLOT(when_parser_finished()) );
         parserThread_->start();
+        return true;
     }
+    return false;
 }
 
 //! 当 markdown 向 html 的转换完成时将调用的槽
 void SmkMarkParser::when_mark_to_html_finished(void) {
     if(parserThread_ != NULL) {
         disconnect(parserThread_, SIGNAL(finished()),
-                   this,           SLOT(when_mark_to_html_finished()) );
+                   this,          SLOT(when_mark_to_html_finished()) );
         delete parserThread_;
         emit completed();
     }
@@ -104,7 +108,7 @@ void SmkMarkParser::when_mark_to_html_finished(void) {
 void SmkMarkParser::when_parser_finished(void) {
     if(parserThread_ != NULL) {
         disconnect(parserThread_, SIGNAL(finished()),
-                   this,           SLOT(when_parser_finished()) );
+                   this,          SLOT(when_parser_finished()) );
         delete parserThread_;
     }
     parserThread_ = NULL;

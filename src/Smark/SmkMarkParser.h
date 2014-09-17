@@ -30,14 +30,14 @@ public:
     //! 将路径为 markPath 的 markdown 文件转换为
     //! 路径为 htmlPath 的 html 格式文件
     //! 使用路径为 cssPath 的 stylesheet 文件
-    void parseMarkToHtml(const QString& markPath,
+    bool parseMarkToHtml(const QString& markPath,
                          const QString& htmlPath,
                          const QString& cssPath );
 
     //! 将路径为 markPath 的 inFormat 格式文件转换为
     //! 路径为 htmlPath 的 outFormat 格式文件
     //! 使用路径为 cssPath 的 stylesheet 文件
-    void parse(const QString& inPath,  const QString& inFormat,
+    bool parse(const QString& inPath,  const QString& inFormat,
                const QString& outPath, const QString& outFormat,
                const QString& cssPath );
 

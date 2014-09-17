@@ -20,6 +20,11 @@ SmkMainWindow::SmkMainWindow(QWidget* parent) :
     markCachePath_ = qMarkCachePath();
     htmlCachePath_ = qHtmlCachePath();
     isModified_     = false;
+
+    // 支持拖动
+    ui->markView->setAcceptDrops(false);
+    ui->htmlView->setAcceptDrops(false);
+    setAcceptDrops(true);
 }
 
 SmkMainWindow::~SmkMainWindow() {
@@ -66,7 +71,7 @@ void SmkMainWindow::_aux_connectSignalAndSlot(void) {
     connect(&parser_,     SIGNAL(completed()),
             this,         SLOT(when_parser_process_finish()) );
     connect(ui->markView, SIGNAL(verticalScroll(float)),
-            ui->htmlView,  SLOT(setScrollRatio(float)) );
+            ui->htmlView, SLOT(setScrollRatio(float)) );
 }
 
 void SmkMainWindow::_aux_switchDisplayMode(SmkGuiMode mode) {
@@ -113,6 +118,7 @@ void SmkMainWindow::_aux_switchDisplayMode(SmkGuiMode mode) {
 }
 
 void SmkMainWindow::_aux_initGUI(void) {
+    ui->htmlView->settings()->setDefaultTextEncoding("utf-8");
     ui->toolBar->setIconSize(QSize(16, 16));
     ui->toolBar->setVisible("TRUE" == qSmkApp()->option("gui.toolbar"));
     _aux_switchDisplayMode(eSmkReadMode);
@@ -221,7 +227,7 @@ void SmkMainWindow::_aux_setCurrentPath(const QString& path) {
     if(path.isEmpty()) {
         setWindowTitle("Smark");
     } else {
-        QString title =  "Smark - " + QFileInfo(path).fileName();
+        QString title = "Smark - " + QFileInfo(path).fileName();
         setWindowTitle(title);
     }
 }
@@ -268,13 +274,18 @@ bool SmkMainWindow::_aux_cancelCurrentOperation(void) {
 }
 
 void SmkMainWindow::_aux_parseMarkdownToHTML(void) {
-    QString   context = ui->markView->toPlainText();
+    QString context = ui->markView->toPlainText();
+    context.append(QString(10, SMK_LINE_END)); // 尾部加上换行符
     QString errorInfo = qSmkSaveText(markCachePath_, context);
     if(errorInfo != SMK_EMPTY_STR) {
         QMessageBox::warning(this, tr("Write Cache File Error"), errorInfo);
     } else {
         QString cssPath = qSmkApp()->option("url.css");
-        parser_.parseMarkToHtml(markCachePath_, htmlCachePath_, cssPath);
+        if(false == parser_.parseMarkToHtml(markCachePath_, htmlCachePath_, cssPath)) {
+            QMessageBox::warning(this,
+                                 tr("Pandoc process is busy, please wait for a minus and try again !"),
+                                 errorInfo );
+        }
     }
 }
 
@@ -385,7 +396,7 @@ void SmkMainWindow::on_actionSave_triggered() {
         isModified_ = false;
         if(windowTitle().startsWith("* ")) // 去除窗口标题的 dirty 标记
             setWindowTitle(windowTitle().remove(0, 2));
-        on_actionFlush_triggered();
+        _aux_parseMarkdownToHTML();
     }
 }
 
@@ -727,6 +738,16 @@ void SmkMainWindow::on_buttonReplaceAll_clicked() {
 
 /* *****************************************************************************
  *
+ *                             光标移动时同步两个视图
+ *
+ * ****************************************************************************/
+
+void SmkMainWindow::on_markView_cursorPositionChanged() {
+    ui->htmlView->setScrollRatio(ui->markView->scrollRatio());
+}
+
+/* *****************************************************************************
+ *
  *                             后台调用 Pandoc 相关
  *
  * ****************************************************************************/
@@ -736,32 +757,37 @@ void SmkMainWindow::when_parser_process_finish(void) {
     QString errorInfo = qSmkLoadText(htmlCachePath_, &context);
     if(errorInfo != SMK_EMPTY_STR) {
         QMessageBox::warning(this, tr("Error"), errorInfo);
-    } else {
-        // update webview, do not use update()
-        htmlContext_.swap(context);
+        return;
+    }
+    htmlContext_.swap(context);
+    qSmkRemoveFile(htmlCachePath_); // remove html cache file
+    qSmkRemoveFile(markCachePath_); // remove markdown cache file
 
-        // replace IPV6 CDN or IPV4 CND as user defined mathjax url
-        htmlContext_.replace("https://d3eoax9i5htok0.cloudfront.net/mathjax/latest/MathJax.js",
-                      qSmkApp()->option("url.mathjax"));
-        htmlContext_.replace("http://cdn.mathjax.org/mathjax/latest/MathJax.js",
-                      qSmkApp()->option("url.mathjax"));
+    // replace IPV6 CDN or IPV4 CND as user defined mathjax url
+    // htmlContext_.replace("https://d3eoax9i5htok0.cloudfront.net/mathjax/latest/MathJax.js",
+    //                     qSmkApp()->option("url.mathjax"));
+    // htmlContext_.replace("http://cdn.mathjax.org/mathjax/latest/MathJax.js",
+    //                     qSmkApp()->option("url.mathjax"));
+    QString mathJaxUrl = "src=\"" + qSmkApp()->option("url.mathjax");
+    htmlContext_.replace(QRegExp("src=\"http.*MathJax.js"), mathJaxUrl);
 
-        // use SVG render MathJax is much faster
-        htmlContext_.replace("TeX-AMS-MML_HTMLorMML", "TeX-AMS-MML_SVG");
+    // use SVG render MathJax is much faster
+    htmlContext_.replace("TeX-AMS-MML_HTMLorMML", "TeX-AMS-MML_SVG");
+
+    // insert HTML template context
+    if(! qSmkApp()->option("text.head").isEmpty())
         htmlContext_.insert(htmlContext_.indexOf("</head>"), qSmkApp()->option("text.head"));
+    if(! qSmkApp()->option("text.hat").isEmpty())
         htmlContext_.insert(htmlContext_.indexOf("<body>")+6, qSmkApp()->option("text.hat"));
+    if(! qSmkApp()->option("text.tail").isEmpty())
         htmlContext_.insert(htmlContext_.indexOf("</body>"), qSmkApp()->option("text.tail"));
+    if(! qSmkApp()->option("text.foot").isEmpty())
         htmlContext_.insert(htmlContext_.indexOf("</body>")+7, qSmkApp()->option("text.foot"));
 
-        int position = ui->htmlView->scrollValue();
-        ui->htmlView->setHtml(htmlContext_, QUrl::fromLocalFile(currentPath_));
-        ui->htmlView->repaint(ui->htmlView->page()->mainFrame()->geometry());
-        ui->htmlView->setScrollValue(position);
-
-        // remove cache file
-        qSmkRemoveFile(htmlCachePath_);
-        qSmkRemoveFile(markCachePath_);
-    }
+    // update webview, do not use update()
+    //! @todo: 这个地方是什么问题？ 对于某些文件老是在这里崩溃
+    //!        难不成是 QtGui 自身的 bug？
+    ui->htmlView->setHtml(htmlContext_, QUrl::fromLocalFile(currentPath_));
 }
 
 void SmkMainWindow::when_mark_is_edit(void) {
