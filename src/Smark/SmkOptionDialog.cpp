@@ -289,3 +289,9 @@ void SmkOptionDialog::on_lineEditMathJaxURL_textEdited(const QString& arg) {
         ui->lineEditCSSURL->setPalette(palette);
     }
 }
+
+void SmkOptionDialog::on_buttonDefault_clicked() {
+    // 恢复默认设置
+    qSmkApp()->loadDefaultOption();
+    initGui();
+}

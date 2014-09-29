@@ -26,6 +26,9 @@ public: // ctor & dtor
 
 public: // option information
 
+    //! 重设为默认设置
+    void loadDefaultOption(void);
+
     //! 获取指定 key 的设置
     QString option(const QString& key) const;
 

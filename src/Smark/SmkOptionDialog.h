@@ -32,7 +32,7 @@ private slots:
     void on_buttonBox_accepted();
     void on_lineEditCSSURL_textEdited(const QString& arg);
     void on_lineEditMathJaxURL_textEdited(const QString& arg);
-
+    void on_buttonDefault_clicked();
 private:
 
     Ui::SmkOptionDialog* ui;
