@@ -183,6 +183,7 @@ void SmkMarkWidget::insertImage(void) {
     QTextCursor cursor = this->textCursor();
     cursor.insertText("<p align=\"center\">\n"
                       "    <img src=\"____\" width=\"60%\">\n"
+                      "    <br />"
                       "    <small> tittle </small>\n"
                       "</p>");
 }
@@ -207,7 +208,7 @@ void SmkMarkWidget::insertMathJax(void) {
         // insert a center align math formation
         if(selected.isEmpty()) {
             cursor.insertText("<center>$$\n"
-                              "_____\n"
+                              "____\n"
                               "$$</center>");
         } else {
             selected.prepend("<center>$$\n");
@@ -218,7 +219,7 @@ void SmkMarkWidget::insertMathJax(void) {
         // the cursor is not at the start of a block
         // insert a inline math formation
         if(selected.isEmpty()) {
-            cursor.insertText("${ ____ }$");
+            cursor.insertText("${  }$");
         } else {
             selected.prepend("${ ");
             selected.append(" }$");
