@@ -16,7 +16,7 @@
 
 ## 安装 Smark
 
-对于 `Win32` 平台的用户，您可以直接下载当前版本的可执行程序 [Smark-X.X-Win32-portable.zip](http://pan.baidu.com/s/1ntMCVFV)。对于其它平台的用户，可以下载当前版本的 Smark 源代码 [Smark-X.X-src.zip](http://pan.baidu.com/s/1ntMCVFV)在本平台上进行编译即可，一般地您可以按照如下步骤编译 `Smark`：
+对于 `Win32` 平台的用户，您可以直接下载当前版本的可执行程序 [Smark-X.X-Win32-portable.zip](http://pan.baidu.com/s/1pJnrX5x)。对于其它平台的用户，可以下载当前版本的 Smark 源代码 [Smark-X.X-src.zip](http://pan.baidu.com/s/1pJnrX5x)在本平台上进行编译即可，一般地您可以按照如下步骤编译 `Smark`：
 
  1. 安装依赖的程序包:
 
@@ -25,13 +25,13 @@
 
     如果您不使用 `apt-get` 作为软件包管理器，自己谷歌搜索如何安装这两个程序包
 
- 2. 下载 Smark 源代码 [Smark-X.X-src.zip](http://pan.baidu.com/s/1ntMCVFV)，解压并编译:
+ 2. 下载 Smark 源代码 [Smark-X.X-src.zip](http://pan.baidu.com/s/1pJnrX5x)，解压并编译:
 
         $ qmake -project
         $ qmake
         $ make
 
- 3. 把编译出的可执行文件移动到您的 `[bin]` 路径下即可使用，此时 `Smark` 将使用默认的 `CSS` 样式表和基于 `MathJax CDN` 的 `MathJax` 访问。如果想要得到与 `Windows` 平台下完全一致的体验，您还需下载 [smark-2.0-resource.zip](http://pan.baidu.com/s/1ntMCVFV) 解压倒 `Smark` 的安装目录下并进行设置。
+ 3. 把编译出的可执行文件移动到您的 `[bin]` 路径下即可使用，此时 `Smark` 将使用默认的 `CSS` 样式表和基于 `MathJax CDN` 的 `MathJax` 访问。如果想要得到与 `Windows` 平台下完全一致的体验，您还需下载 [smark-2.0-resource.zip](http://pan.baidu.com/s/1pJnrX5x) 解压倒 `Smark` 的安装目录下并进行设置。
 
 ## 运行截图
 
@@ -47,7 +47,7 @@
 
 ### 64 位 Windows 下提示无法运行 pandoc：
 
- 这是因为 [Smark-X.X-Win32-portable.zip](http://pan.baidu.com/s/1ntMCVFV) 中自带的 pandoc.exe 是 32 位系统下的，您可以通过下载安装包 [pandoc-1.13.1-win64.msi](http://pan.baidu.com/s/1ntMCVFV#path=%252Fsmark) 直接安装 64 位的 `pandoc` 而删除 [Smark-X.X-Win32-portable.zip](http://pan.baidu.com/s/1ntMCVFV) 中自带的 32 位的 `pandoc.exe`。
+ 这是因为 [Smark-X.X-Win32-portable.zip](http://pan.baidu.com/s/1pJnrX5x) 中自带的 pandoc.exe 是 32 位系统下的，您可以通过下载安装包 [pandoc-1.13.1-win64.msi](http://pan.baidu.com/s/1pJnrX5x) 直接安装 64 位的 `pandoc` 而删除 [Smark-X.X-Win32-portable.zip](http://pan.baidu.com/s/1pJnrX5x) 中自带的 32 位的 `pandoc.exe`。
 
 ### 谷歌输入法无法输入问题
 
