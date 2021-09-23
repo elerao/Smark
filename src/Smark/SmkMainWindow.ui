@@ -200,18 +200,22 @@
      <x>0</x>
      <y>0</y>
      <width>1113</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Consolas</family>
      <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+     <stylestrategy>PreferAntialias</stylestrategy>
+     <kerning>true</kerning>
     </font>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File (&amp;F)</string>
+     <string>文件 (&amp;F)</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -226,17 +230,19 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View (&amp;V)</string>
+     <string>视图 (&amp;V)</string>
     </property>
     <addaction name="actionReadOnly"/>
     <addaction name="actionPreview"/>
     <addaction name="actionEditOnly"/>
     <addaction name="separator"/>
     <addaction name="actionFullScreen"/>
+    <addaction name="separator"/>
+    <addaction name="action_2"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
-     <string>Edit (&amp;E)</string>
+     <string>编辑 (&amp;E)</string>
     </property>
     <addaction name="actionFlush"/>
     <addaction name="actionViewHTML"/>
@@ -252,7 +258,7 @@
    </widget>
    <widget class="QMenu" name="menuFormat">
     <property name="title">
-     <string>Format (&amp;F)</string>
+     <string>格式 (&amp;F)</string>
     </property>
     <addaction name="actionFormatBlod"/>
     <addaction name="actionFormatItalic"/>
@@ -273,7 +279,7 @@
    </widget>
    <widget class="QMenu" name="menuInsert">
     <property name="title">
-     <string>Insert (&amp;I)</string>
+     <string>插入 (&amp;I)</string>
     </property>
     <addaction name="actionInsertImage"/>
     <addaction name="actionInsertLink"/>
@@ -281,7 +287,7 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help (&amp;H)</string>
+     <string>帮助 (&amp;H)</string>
     </property>
     <addaction name="actionAboutQt"/>
     <addaction name="actionAboutSmark"/>
@@ -361,7 +367,7 @@
      <normaloff>:/icon/file-new.png</normaloff>:/icon/file-new.png</iconset>
    </property>
    <property name="text">
-    <string>New</string>
+    <string>新建</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -373,7 +379,7 @@
      <normaloff>:/icon/file-open.png</normaloff>:/icon/file-open.png</iconset>
    </property>
    <property name="text">
-    <string>Open</string>
+    <string>打开</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -385,7 +391,7 @@
      <normaloff>:/icon/file-save.png</normaloff>:/icon/file-save.png</iconset>
    </property>
    <property name="text">
-    <string>Save</string>
+    <string>保存</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -397,7 +403,7 @@
      <normaloff>:/icon/file-saveas.png</normaloff>:/icon/file-saveas.png</iconset>
    </property>
    <property name="text">
-    <string>Save As</string>
+    <string>另存为</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
@@ -409,7 +415,7 @@
      <normaloff>:/icon/file-close.png</normaloff>:/icon/file-close.png</iconset>
    </property>
    <property name="text">
-    <string>Close</string>
+    <string>关闭</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
@@ -421,7 +427,7 @@
      <normaloff>:/icon/print.png</normaloff>:/icon/print.png</iconset>
    </property>
    <property name="text">
-    <string>Print</string>
+    <string>打印</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
@@ -445,7 +451,7 @@
      <normaloff>:/icon/view-preview.png</normaloff>:/icon/view-preview.png</iconset>
    </property>
    <property name="text">
-    <string>Preview</string>
+    <string>读+写</string>
    </property>
    <property name="shortcut">
     <string>F6</string>
@@ -457,7 +463,7 @@
      <normaloff>:/icon/view-read-only.png</normaloff>:/icon/view-read-only.png</iconset>
    </property>
    <property name="text">
-    <string>Read Only</string>
+    <string>只读</string>
    </property>
    <property name="shortcut">
     <string>F7</string>
@@ -469,7 +475,7 @@
      <normaloff>:/icon/view-edit-only.png</normaloff>:/icon/view-edit-only.png</iconset>
    </property>
    <property name="text">
-    <string>Edit Only</string>
+    <string>编辑</string>
    </property>
    <property name="shortcut">
     <string>F8</string>
@@ -484,7 +490,7 @@
      <normaloff>:/icon/view-fullscreen.png</normaloff>:/icon/view-fullscreen.png</iconset>
    </property>
    <property name="text">
-    <string>Full Screen</string>
+    <string>全屏</string>
    </property>
    <property name="shortcut">
     <string>F11</string>
@@ -580,7 +586,7 @@
      <normaloff>:/icon/edit-view-html.png</normaloff>:/icon/edit-view-html.png</iconset>
    </property>
    <property name="text">
-    <string>View HTML Source</string>
+    <string>查看HTML源</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+C</string>
@@ -676,7 +682,7 @@
      <normaloff>:/icon/format-code.png</normaloff>:/icon/format-code.png</iconset>
    </property>
    <property name="text">
-    <string>Code</string>
+    <string>代码</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+`</string>
@@ -700,7 +706,7 @@
      <normaloff>:/icon/align-left.png</normaloff>:/icon/align-left.png</iconset>
    </property>
    <property name="text">
-    <string>Align Left</string>
+    <string>左对齐</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -712,7 +718,7 @@
      <normaloff>:/icon/align-right.png</normaloff>:/icon/align-right.png</iconset>
    </property>
    <property name="text">
-    <string>Align Right</string>
+    <string>右对齐</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
@@ -724,7 +730,7 @@
      <normaloff>:/icon/align-center.png</normaloff>:/icon/align-center.png</iconset>
    </property>
    <property name="text">
-    <string>Align Center</string>
+    <string>居中</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
@@ -736,7 +742,7 @@
      <normaloff>:/icon/insert-image.png</normaloff>:/icon/insert-image.png</iconset>
    </property>
    <property name="text">
-    <string>Image</string>
+    <string>图片</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+I, Ctrl+Shift+P</string>
@@ -748,7 +754,7 @@
      <normaloff>:/icon/insert-link.png</normaloff>:/icon/insert-link.png</iconset>
    </property>
    <property name="text">
-    <string>Link</string>
+    <string>链接</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+L</string>
@@ -760,7 +766,7 @@
      <normaloff>:/icon/insert-formation.png</normaloff>:/icon/insert-formation.png</iconset>
    </property>
    <property name="text">
-    <string>MathJax</string>
+    <string>公式</string>
    </property>
    <property name="toolTip">
     <string>MathJax</string>
@@ -785,7 +791,16 @@
      <normaloff>:/icon/file-option.png</normaloff>:/icon/file-option.png</iconset>
    </property>
    <property name="text">
-    <string>Option</string>
+    <string>设置</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="icon">
+    <iconset resource="rc/icon.qrc">
+     <normaloff>:/icon/DaGang.png</normaloff>:/icon/DaGang.png</iconset>
+   </property>
+   <property name="text">
+    <string>大纲</string>
    </property>
   </action>
  </widget>

@@ -43,5 +43,6 @@
         <file>icon/print.png</file>
         <file>icon/edit-view-html.png</file>
         <file>MD.png</file>
+        <file>icon/DaGang.png</file>
     </qresource>
 </RCC>
