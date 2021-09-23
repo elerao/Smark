@@ -2,7 +2,7 @@
 
 TEMPLATE = app
 TARGET   = smark
-QT       += widgets webkit webkitwidgets
+QT       += widgets webkit webkitwidgets printsupport
 INCLUDEPATH += . src
 DEPENDPATH  += . src
 # Input File ###################################################################
